@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BĐS Master - Quản Trị Đầu Tư & Sales CRM</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#0f766e',
+                        accent: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Tùy chỉnh thanh cuộn đẹp mắt */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md">
+                        <i class="fa-solid fa-building-user text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent">BĐS MASTER</h1>
+                        <p class="text-[11px] text-slate-500 font-medium">Đầu Tư & Sales CRM</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <nav class="hidden md:flex space-x-1 border border-slate-200 bg-slate-100 p-1 rounded-xl">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-blue-700 bg-white shadow-sm">
+                        <i class="fa-solid fa-chart-pie mr-2"></i>Bảng Điều Khiển
+                    </button>
+                    <button onclick="switchTab('properties')" id="nav-properties" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-hotel mr-2"></i>Danh Mục BĐS
+                    </button>
+                    <button onclick="switchTab('crm')" id="nav-crm" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-users-gear mr-2"></i>Khách Hàng (CRM)
+                    </button>
+                </nav>
+
+                <!-- Data Backup / Actions -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="exportDataJSON()" title="Xuất dữ liệu JSON" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition flex items-center">
+                        <i class="fa-solid fa-download mr-1.5"></i> <span class="hidden sm:inline">Export</span>
+                    </button>
+                    <label title="Nhập file JSON" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition cursor-pointer flex items-center">
+                        <i class="fa-solid fa-upload mr-1.5"></i> <span class="hidden sm:inline">Import</span>
+                        <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importDataJSON(event)">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Tabs -->
+        <div class="flex md:hidden border-t border-slate-200 bg-white overflow-x-auto px-2 py-1 justify-around">
+            <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="text-xs font-semibold py-2 px-3 text-blue-600 border-b-2 border-blue-600 whitespace-nowrap">
+                <i class="fa-solid fa-chart-pie mr-1"></i>Thống Kê
+            </button>
+            <button onclick="switchTab('properties')" id="mob-nav-properties" class="text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap">
+                <i class="fa-solid fa-hotel mr-1"></i>Danh Mục BĐS
+            </button>
+            <button onclick="switchTab('crm')" id="mob-nav-crm" class="text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap">
+                <i class="fa-solid fa-users mr-1"></i>CRM
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- ============================================== -->
+        <!-- TAB 1: BẢNG ĐIỀU KHIỂN & PHÂN TÍCH ĐẦU TƯ     -->
+        <!-- ============================================== -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Thẻ KPI -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Tổng BĐS -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Tổng Số BĐS</p>
+                        <h3 id="kpi-total-properties" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                        <p class="text-[11px] text-slate-500 mt-1"><span id="kpi-available-prop" class="font-bold text-blue-600">0</span> đang giao dịch</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-landmark"></i>
+                    </div>
+                </div>
+
+                <!-- Tổng vốn đầu tư -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Tổng Vốn Đầu Tư</p>
+                        <h3 id="kpi-total-investment" class="text-2xl font-black text-indigo-700 mt-1">0 đ</h3>
+                        <p class="text-[11px] text-slate-500 mt-1">Bao gồm giá mua & sửa chữa</p>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-vault"></i>
+                    </div>
+                </div>
+
+                <!-- Dự kiến Lợi nhuận -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Dự Kiến Lợi Nhuận</p>
+                        <h3 id="kpi-total-profit" class="text-2xl font-black text-emerald-600 mt-1">0 đ</h3>
+                        <p class="text-[11px] text-emerald-600 font-medium mt-1">Dựa trên giá bán kỳ vọng</p>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                </div>
+
+                <!-- Tỷ suất ROI -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">ROI Trung Bình</p>
+                        <h3 id="kpi-avg-roi" class="text-2xl font-black text-amber-500 mt-1">0.0%</h3>
+                        <p class="text-[11px] text-slate-500 mt-1">Hiệu suất sinh lời kỳ vọng</p>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                </div>
+
+                <!-- Khách hàng tiềm năng -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Khách Tiềm Năng</p>
+                        <h3 id="kpi-total-customers" class="text-2xl font-black text-rose-600 mt-1">0</h3>
+                        <p class="text-[11px] text-slate-500 mt-1"><span id="kpi-active-customers" class="font-bold text-rose-500">0</span> đang tư vấn</p>
+                    </div>
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-user-tag"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Doughnut Chart: Phân bổ loại hình -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+                    <h4 class="text-base font-bold text-slate-800 flex items-center mb-4">
+                        <i class="fa-solid fa-chart-pie text-blue-600 mr-2"></i> Phân Bổ BĐS Theo Loại Hình
+                    </h4>
+                    <div class="flex-1 relative min-h-[260px] flex items-center justify-center">
+                        <canvas id="propertyTypeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bar Chart: Vốn Mua vs Kỳ Vọng Bán -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+                    <h4 class="text-base font-bold text-slate-800 flex items-center mb-4">
+                        <i class="fa-solid fa-chart-column text-indigo-600 mr-2"></i> Vốn Đầu Tư vs Kỳ Vọng Bán (Triệu VNĐ)
+                    </h4>
+                    <div class="flex-1 relative min-h-[260px]">
+                        <canvas id="investmentBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: QUẢN LÝ DANH MỤC BẤT ĐỘNG SẢN           -->
+        <!-- ============================================== -->
+        <section id="tab-properties" class="tab-content hidden space-y-6">
+            <!-- Filter & Action Bar -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-wrap flex-1 gap-3 w-full">
+                    <!-- Search Input -->
+                    <div class="relative flex-1 min-w-[220px]">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="prop-filter-search" oninput="renderProperties()" placeholder="Tìm theo tên BĐS, địa chỉ..." 
+                            class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+
+                    <!-- Filter Loại Hình -->
+                    <select id="prop-filter-type" onchange="renderProperties()" class="border border-slate-300 rounded-xl text-sm px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-700">
+                        <option value="all">Tất cả loại hình</option>
+                        <option value="dat_nen">Đất nền</option>
+                        <option value="nha_pho">Nhà phố</option>
+                        <option value="can_ho">Căn hộ</option>
+                        <option value="biet_thu">Biệt thự</option>
+                    </select>
+
+                    <!-- Filter Trạng Thái -->
+                    <select id="prop-filter-status" onchange="renderProperties()" class="border border-slate-300 rounded-xl text-sm px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-700">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="dang_ban">Đang bán</option>
+                        <option value="da_coc">Đã cọc</option>
+                        <option value="cho_thue">Cho thuê</option>
+                        <option value="da_ban">Đã bán</option>
+                    </select>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center space-x-3 w-full lg:w-auto justify-end">
+                    <div class="border border-slate-200 bg-slate-100 p-1 rounded-xl flex">
+                        <button onclick="setPropertyView('grid')" id="view-grid-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-blue-700 shadow-sm">
+                            <i class="fa-solid fa-border-all"></i>
+                        </button>
+                        <button onclick="setPropertyView('table')" id="view-table-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900">
+                            <i class="fa-solid fa-table-list"></i>
+                        </button>
+                    </div>
+                    <button onclick="openPropertyModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-md transition flex items-center">
+                        <i class="fa-solid fa-plus mr-2"></i>Thêm BĐS Mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area: Grid Card View -->
+            <div id="properties-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <!-- Content Area: Table View -->
+            <div id="properties-table-container" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="p-4">Tên BĐS / Vị trí</th>
+                            <th class="p-4">Loại hình / Pháp lý</th>
+                            <th class="p-4">Diện tích</th>
+                            <th class="p-4 text-right">Tổng Vốn</th>
+                            <th class="p-4 text-right">Giá Bán Kỳ Vọng</th>
+                            <th class="p-4 text-right">Lợi Nhuận (ROI)</th>
+                            <th class="p-4 text-center">Trạng Thái</th>
+                            <th class="p-4 text-center">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="properties-table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: KHÁCH HÀNG & SALES CRM                 -->
+        <!-- ============================================== -->
+        <section id="tab-crm" class="tab-content hidden space-y-6">
+            <!-- Filter & Action Bar CRM -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-wrap flex-1 gap-3 w-full">
+                    <div class="relative flex-1 min-w-[220px]">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="crm-filter-search" oninput="renderCustomers()" placeholder="Tìm khách hàng theo tên, số điện thoại..." 
+                            class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+
+                    <select id="crm-filter-status" onchange="renderCustomers()" class="border border-slate-300 rounded-xl text-sm px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-700">
+                        <option value="all">Tất cả giai đoạn</option>
+                        <option value="moi">Mới tiếp cận</option>
+                        <option value="tu_van">Đang tư vấn</option>
+                        <option value="da_chot">Đã chốt thành công</option>
+                        <option value="tam_dung">Tạm dừng</option>
+                    </select>
+                </div>
+
+                <button onclick="openCustomerModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-md transition flex items-center whitespace-nowrap">
+                    <i class="fa-solid fa-user-plus mr-2"></i>Thêm Khách Hàng
+                </button>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="p-4">Khách Hàng</th>
+                            <th class="p-4">Số Điện Thoại</th>
+                            <th class="p-4">Nhu Cầu</th>
+                            <th class="p-4 text-right">Ngân Sách Tối Đa</th>
+                            <th class="p-4">BĐS Quan Tâm</th>
+                            <th class="p-4 text-center">Trạng Thái</th>
+                            <th class="p-4 text-center">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crm-table-body" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+        Phần mềm Quản lý Bất Động Sản & Sales CRM cá nhân • Dữ liệu lưu cục bộ tại Trình duyệt (localStorage)
+    </footer>
+
+    <!-- ============================================== -->
+    <!-- MODAL: THÊM / SỬA BẤT ĐỘNG SẢN                -->
+    <!-- ============================================== -->
+    <div id="propertyModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden my-8 animate-fade-in">
+            <!-- Modal Header -->
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <h3 id="propModalTitle" class="text-base font-bold flex items-center">
+                    <i class="fa-solid fa-house-chimney text-blue-400 mr-2"></i> Thêm Bất Động Sản Mới
+                </h3>
+                <button onclick="closePropertyModal()" class="text-slate-400 hover:text-white transition text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="propertyForm" onsubmit="handlePropertySubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="propId">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Tên BĐS -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tên Bất Động Sản *</label>
+                        <input type="text" id="propName" required placeholder="Ví dụ: Đất thổ cư KDC Long Hòa"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+
+                    <!-- Loại hình -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Loại Hình *</label>
+                        <select id="propType" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="dat_nen">Đất nền</option>
+                            <option value="nha_pho">Nhà phố</option>
+                            <option value="can_ho">Căn hộ</option>
+                            <option value="biet_thu">Biệt thự</option>
+                        </select>
+                    </div>
+
+                    <!-- Pháp lý -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Pháp Lý *</label>
+                        <select id="propLegal" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="Sổ hồng riêng">Sổ hồng riêng</option>
+                            <option value="Sổ đỏ riêng">Sổ đỏ</option>
+                            <option value="Hợp đồng mua bán">HĐ Mua bán (HĐMB)</option>
+                            <option value="Chờ cấp sổ">Chờ cấp sổ</option>
+                        </select>
+                    </div>
+
+                    <!-- Địa chỉ -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Địa Chỉ / Vị Trí *</label>
+                        <input type="text" id="propAddress" required placeholder="Xã/Phường, Quận/Huyện, Tỉnh/TP"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+
+                    <!-- Diện tích -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Diện Tích (m²) *</label>
+                        <input type="number" step="0.1" id="propArea" required placeholder="Ví dụ: 120"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Trạng Thái Giao Dịch *</label>
+                        <select id="propStatus" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="dang_ban">Đang bán</option>
+                            <option value="da_coc">Đã cọc</option>
+                            <option value="cho_thue">Cho thuê</option>
+                            <option value="da_ban">Đã bán hoàn tất</option>
+                        </select>
+                    </div>
+
+                    <!-- Giá mua vào -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giá Mua Vào (VNĐ) *</label>
+                        <input type="number" id="propBuyPrice" oninput="calculateFinancials()" required placeholder="Ví dụ: 2500000000"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <p id="propBuyPriceHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
+                    </div>
+
+                    <!-- Chi phí phát sinh -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Sửa Chữa / Pháp Lý (VNĐ)</label>
+                        <input type="number" id="propExtraCost" oninput="calculateFinancials()" value="0" placeholder="Ví dụ: 150000000"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <p id="propExtraCostHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
+                    </div>
+
+                    <!-- Giá bán kỳ vọng -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giá Bán Kỳ Vọng (VNĐ) *</label>
+                        <input type="number" id="propSellPrice" oninput="calculateFinancials()" required placeholder="Ví dụ: 3200000000"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <p id="propSellPriceHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
+                    </div>
+                </div>
+
+                <!-- Bảng Tự Động Tính Toán Live Preview -->
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mt-2">
+                    <p class="text-xs font-bold text-blue-900 uppercase tracking-wide mb-2">Bảng Tính Tài Chính Dự Kiến Tự Động</p>
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-white p-2 rounded-xl border border-blue-100">
+                            <span class="block text-[11px] text-slate-500">Tổng Vốn Bỏ Ra</span>
+                            <span id="previewTotalCost" class="text-sm font-bold text-slate-800">0 đ</span>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl border border-blue-100">
+                            <span class="block text-[11px] text-slate-500">Lợi Nhuận Ròng</span>
+                            <span id="previewProfit" class="text-sm font-bold text-emerald-600">0 đ</span>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl border border-blue-100">
+                            <span class="block text-[11px] text-slate-500">Tỷ Suất Lời (ROI)</span>
+                            <span id="previewROI" class="text-sm font-bold text-amber-600">0.0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closePropertyModal()" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+                        Hủy Bỏ
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition">
+                        Lưu Thông Tin
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: THÊM / SỬA KHÁCH HÀNG (CRM)            -->
+    <!-- ============================================== -->
+    <div id="customerModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden my-8 animate-fade-in">
+            <!-- Modal Header -->
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <h3 id="crmModalTitle" class="text-base font-bold flex items-center">
+                    <i class="fa-solid fa-user-plus text-emerald-400 mr-2"></i> Thêm Khách Hàng Tiềm Năng
+                </h3>
+                <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white transition text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="customerForm" onsubmit="handleCustomerSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="crmId">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Họ Và Tên Khách Hàng *</label>
+                    <input type="text" id="crmName" required placeholder="Ví dụ: Nguyễn Văn An"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Số Điện Thoại Liên Hệ *</label>
+                    <input type="tel" id="crmPhone" required placeholder="Ví dụ: 0912345678"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mục Đích Mua *</label>
+                        <select id="crmDemand" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="mua_o">Mua để ở</option>
+                            <option value="dau_tu">Mua để đầu tư</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giai Đoạn Chăm Sóc *</label>
+                        <select id="crmStatus" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="moi">Mới tiếp cận</option>
+                            <option value="tu_van">Đang tư vấn</option>
+                            <option value="da_chot">Đã chốt thành công</option>
+                            <option value="tam_dung">Tạm dừng</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ngân Sách Tối Đa (VNĐ) *</label>
+                    <input type="number" id="crmBudget" required placeholder="Ví dụ: 3000000000"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <p id="crmBudgetHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">BĐS Đang Quan Tâm</label>
+                    <select id="crmPropertyId" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="">-- Chưa gắn BĐS cụ thể --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ghi Chú Trao Đổi</label>
+                    <textarea id="crmNotes" rows="2" placeholder="Ghi chú sở thích, thời gian rảnh, điều kiện vay..."
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeCustomerModal()" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+                        Hủy
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow transition">
+                        Lưu Khách Hàng
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- LOGIC JAVASCRIPT TOÀN BỘ ỨNG DỤNG              -->
+    <!-- ============================================== -->
+    <script>
+        /* =====================================
+           1. CẤU HÌNH & DỮ LIỆU BAN ĐẦU
+           ===================================== */
+        const STORAGE_KEY_PROPERTIES = 'bds_app_properties_v1';
+        const STORAGE_KEY_CUSTOMERS = 'bds_app_customers_v1';
+
+        // Bộ dữ liệu mẫu khởi đầu phong phú
+        const defaultProperties = [
+            {
+                id: 'prop-1',
+                name: 'Đất Nền KDC Long Hậu',
+                type: 'dat_nen',
+                address: 'Huyện Cần Giuộc, Long An',
+                area: 100,
+                buyPrice: 1800000000,
+                extraCost: 50000000,
+                sellPrice: 2450000000,
+                legal: 'Sổ đỏ riêng',
+                status: 'dang_ban'
+            },
+            {
+                id: 'prop-2',
+                name: 'Nhà Phố KDC Him Lam Kênh Tẻ',
+                type: 'nha_pho',
+                address: 'Phường Tân Hưng, Quận 7, TP.HCM',
+                area: 125,
+                buyPrice: 12500000000,
+                extraCost: 350000000,
+                sellPrice: 15800000000,
+                legal: 'Sổ hồng riêng',
+                status: 'da_coc'
+            },
+            {
+                id: 'prop-3',
+                name: 'Căn Hộ 2PN Vinhomes Grand Park',
+                type: 'can_ho',
+                address: 'Phường Long Bình, TP. Thủ Đức, TP.HCM',
+                area: 69,
+                buyPrice: 2600000000,
+                extraCost: 80000000,
+                sellPrice: 3100000000,
+                legal: 'Hợp đồng mua bán',
+                status: 'dang_ban'
+            },
+            {
+                id: 'prop-4',
+                name: 'Biệt Thự Đơn Lập Aqua City',
+                type: 'biet_thu',
+                address: 'Long Hưng, Biên Hòa, Đồng Nai',
+                area: 300,
+                buyPrice: 18000000000,
+                extraCost: 500000000,
+                sellPrice: 23500000000,
+                legal: 'Hợp đồng mua bán',
+                status: 'cho_thue'
+            }
+        ];
+
+        const defaultCustomers = [
+            {
+                id: 'cust-1',
+                name: 'Trần Văn Hoàng',
+                phone: '0988123456',
+                demand: 'dau_tu',
+                budget: 3000000000,
+                status: 'tu_van',
+                propertyId: 'prop-1',
+                notes: 'Ưu tiên đất nền có sổ sẵn, thanh khoản nhanh.'
+            },
+            {
+                id: 'cust-2',
+                name: 'Lê Thị Thu Thảo',
+                phone: '0903987654',
+                demand: 'mua_o',
+                budget: 16000000000,
+                status: 'tu_van',
+                propertyId: 'prop-2',
+                notes: 'Tìm nhà gần trường học quốc tế cho con, sẵn sàng đặt cọc trong tuần.'
+            },
+            {
+                id: 'cust-3',
+                name: 'Nguyễn Thành Nam',
+                phone: '0918776655',
+                demand: 'dau_tu',
+                budget: 4000000000,
+                status: 'moi',
+                propertyId: 'prop-3',
+                notes: 'Quan tâm chung cư để cho thuê dòng tiền.'
+            }
+        ];
+
+        // Biến trạng thái toàn cục (State)
+        let properties = [];
+        let customers = [];
+        let propertyViewMode = 'grid'; // 'grid' hoặc 'table'
+        let chartInstances = {};
+
+        /* =====================================
+           2. HÀM TIỆN ÍCH ĐỊNH DẠNG (FORMATTERS)
+           ===================================== */
+        // Định dạng tiền tệ VNĐ chuẩn
+        function formatVND(value) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value || 0);
+        }
+
+        // Định dạng số rút gọn (Tỷ / Triệu)
+        function formatShortVND(value) {
+            if (!value || isNaN(value)) return '0 đ';
+            if (value >= 1000000000) {
+                return (value / 1000000000).toFixed(2).replace(/\.00$/, '') + ' tỷ';
+            }
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1).replace(/\.0$/, '') + ' tr';
+            }
+            return formatVND(value);
+        }
+
+        // Tên tiếng Việt của loại hình
+        function getTypeName(type) {
+            const types = {
+                'dat_nen': 'Đất nền',
+                'nha_pho': 'Nhà phố',
+                'can_ho': 'Căn hộ',
+                'biet_thu': 'Biệt thự'
+            };
+            return types[type] || type;
+        }
+
+        // Badge màu trạng thái BĐS
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'dang_ban':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700"><i class="fa-solid fa-clock mr-1"></i>Đang bán</span>`;
+                case 'da_coc':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700"><i class="fa-solid fa-handshake mr-1"></i>Đã cọc</span>`;
+                case 'cho_thue':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700"><i class="fa-solid fa-key mr-1"></i>Cho thuê</span>`;
+                case 'da_ban':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700"><i class="fa-solid fa-circle-check mr-1"></i>Đã bán</span>`;
+                default:
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">${status}</span>`;
+            }
+        }
+
+        // Badge màu giai đoạn CRM
+        function getCrmStatusBadge(status) {
+            switch(status) {
+                case 'moi':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700"><i class="fa-solid fa-star mr-1 text-slate-400"></i>Mới</span>`;
+                case 'tu_van':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700"><i class="fa-solid fa-comments mr-1"></i>Đang tư vấn</span>`;
+                case 'da_chot':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700"><i class="fa-solid fa-award mr-1"></i>Đã chốt</span>`;
+                case 'tam_dung':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700"><i class="fa-solid fa-circle-pause mr-1"></i>Tạm dừng</span>`;
+                default:
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">${status}</span>`;
+            }
+        }
+
+        /* =====================================
+           3. QUẢN LÝ DỮ LIỆU & LOCAL STORAGE
+           ===================================== */
+        function loadData() {
+            try {
+                const storedProps = localStorage.getItem(STORAGE_KEY_PROPERTIES);
+                const storedCusts = localStorage.getItem(STORAGE_KEY_CUSTOMERS);
+                properties = storedProps ? JSON.parse(storedProps) : defaultProperties;
+                customers = storedCusts ? JSON.parse(storedCusts) : defaultCustomers;
+            } catch (e) {
+                console.error("Lỗi khi tải từ localStorage", e);
+                properties = defaultProperties;
+                customers = defaultCustomers;
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY_PROPERTIES, JSON.stringify(properties));
+            localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(customers));
+            refreshApp();
+        }
+
+        // Xuất file dữ liệu JSON dự phòng
+        function exportDataJSON() {
+            const dataToExport = {
+                exportDate: new Date().toISOString(),
+                properties: properties,
+                customers: customers
+            };
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bds_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Nhập dữ liệu từ file JSON
+        function importDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.properties && Array.isArray(imported.properties)) {
+                        properties = imported.properties;
+                    }
+                    if (imported.customers && Array.isArray(imported.customers)) {
+                        customers = imported.customers;
+                    }
+                    saveData();
+                    alert("Nhập dữ liệu thành công!");
+                } catch (err) {
+                    alert("File không hợp lệ hoặc bị lỗi cấu trúc JSON!");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // reset input
+        }
+
+        /* =====================================
+           4. CHUYỂN ĐỔI TAB GIAO DIỆN
+           ===================================== */
+        function switchTab(tabId) {
+            // Ẩn tất cả section tab
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Hiển thị tab được chọn
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.remove('hidden');
+
+            // Cập nhật kiểu dáng nút tab desktop
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900";
+            });
+            const activeDesktopBtn = document.getElementById(`nav-${tabId}`);
+            if (activeDesktopBtn) {
+                activeDesktopBtn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-blue-700 bg-white shadow-sm";
+            }
+
+            // Cập nhật tab mobile
+            ['dashboard', 'properties', 'crm'].forEach(t => {
+                const mobBtn = document.getElementById(`mob-nav-${t}`);
+                if (mobBtn) {
+                    if (t === tabId) {
+                        mobBtn.className = "text-xs font-semibold py-2 px-3 text-blue-600 border-b-2 border-blue-600 whitespace-nowrap";
+                    } else {
+                        mobBtn.className = "text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap";
+                    }
+                }
+            });
+
+            if (tabId === 'dashboard') {
+                renderDashboard();
+            } else if (tabId === 'properties') {
+                renderProperties();
+            } else if (tabId === 'crm') {
+                renderCustomers();
+            }
+        }
+
+        /* =====================================
+           5. DASHBOARD & BIỂU ĐỒ CHART.JS
+           ===================================== */
+        function renderDashboard() {
+            // Tính toán số liệu KPIs
+            let totalInvestment = 0;
+            let totalProfit = 0;
+            let totalRoiWeighted = 0;
+            let availableCount = 0;
+
+            properties.forEach(p => {
+                const totalCost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
+                const profit = (Number(p.sellPrice) || 0) - totalCost;
+                totalInvestment += totalCost;
+                totalProfit += profit;
+                if (p.status === 'dang_ban' || p.status === 'da_coc') {
+                    availableCount++;
+                }
+            });
+
+            const avgRoi = totalInvestment > 0 ? ((totalProfit / totalInvestment) * 100).toFixed(1) : '0.0';
+            const activeCustomers = customers.filter(c => c.status === 'tu_van' || c.status === 'moi').length;
+
+            // Cập nhật HTML KPI
+            document.getElementById('kpi-total-properties').innerText = properties.length;
+            document.getElementById('kpi-available-prop').innerText = availableCount;
+            document.getElementById('kpi-total-investment').innerText = formatShortVND(totalInvestment);
+            document.getElementById('kpi-total-profit').innerText = (totalProfit >= 0 ? '+' : '') + formatShortVND(totalProfit);
+            document.getElementById('kpi-avg-roi').innerText = `${avgRoi}%`;
+            document.getElementById('kpi-total-customers').innerText = customers.length;
+            document.getElementById('kpi-active-customers').innerText = activeCustomers;
+
+            // Vẽ lại Charts
+            renderTypeDoughnutChart();
+            renderInvestmentBarChart();
+        }
+
+        function renderTypeDoughnutChart() {
+            const ctx = document.getElementById('propertyTypeChart').getContext('2d');
+            
+            // Đếm số lượng theo loại hình
+            const counts = { dat_nen: 0, nha_pho: 0, can_ho: 0, biet_thu: 0 };
+            properties.forEach(p => {
+                if (counts[p.type] !== undefined) counts[p.type]++;
+            });
+
+            if (chartInstances.typeChart) {
+                chartInstances.typeChart.destroy();
+            }
+
+            chartInstances.typeChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Đất nền', 'Nhà phố', 'Căn hộ', 'Biệt thự'],
+                    datasets: [{
+                        data: [counts.dat_nen, counts.nha_pho, counts.can_ho, counts.biet_thu],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        function renderInvestmentBarChart() {
+            const ctx = document.getElementById('investmentBarChart').getContext('2d');
+
+            // Lấy tối đa 6 BĐS để hiển thị gọn gàng
+            const displayProps = properties.slice(0, 6);
+            const labels = displayProps.map(p => p.name.length > 15 ? p.name.substring(0, 15) + '...' : p.name);
+            const costData = displayProps.map(p => Math.round(((Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0)) / 1000000));
+            const sellData = displayProps.map(p => Math.round((Number(p.sellPrice) || 0) / 1000000));
+
+            if (chartInstances.barChart) {
+                chartInstances.barChart.destroy();
+            }
+
+            chartInstances.barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Tổng Vốn (Triệu VNĐ)',
+                            data: costData,
+                            backgroundColor: '#94a3b8',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Giá Bán Kỳ Vọng (Triệu VNĐ)',
+                            data: sellData,
+                            backgroundColor: '#2563eb',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${new Intl.NumberFormat('vi-VN').format(context.raw)} tr`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: val => `${val} tr`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /* =====================================
+           6. QUẢN LÝ BẤT ĐỘNG SẢN (PROPERTIES)
+           ===================================== */
+        function setPropertyView(mode) {
+            propertyViewMode = mode;
+            const gridBtn = document.getElementById('view-grid-btn');
+            const tableBtn = document.getElementById('view-table-btn');
+            const gridCont = document.getElementById('properties-grid-container');
+            const tableCont = document.getElementById('properties-table-container');
+
+            if (mode === 'grid') {
+                gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-blue-700 shadow-sm";
+                tableBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900";
+                gridCont.classList.remove('hidden');
+                tableCont.classList.add('hidden');
+            } else {
+                tableBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-blue-700 shadow-sm";
+                gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900";
+                tableCont.classList.remove('hidden');
+                gridCont.classList.add('hidden');
+            }
+            renderProperties();
+        }
+
+        function getFilteredProperties() {
+            const search = document.getElementById('prop-filter-search')?.value.toLowerCase().trim() || '';
+            const typeFilter = document.getElementById('prop-filter-type')?.value || 'all';
+            const statusFilter = document.getElementById('prop-filter-status')?.value || 'all';
+
+            return properties.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(search) || p.address.toLowerCase().includes(search);
+                const matchesType = typeFilter === 'all' || p.type === typeFilter;
+                const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+                return matchesSearch && matchesType && matchesStatus;
+            });
+        }
+
+        function renderProperties() {
+            const list = getFilteredProperties();
+            const gridContainer = document.getElementById('properties-grid-container');
+            const tableBody = document.getElementById('properties-table-body');
+
+            // Render Card View
+            if (list.length === 0) {
+                gridContainer.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-500 font-medium">Không tìm thấy bất động sản nào phù hợp.</p>
+                    </div>`;
+                tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">Không có dữ liệu</td></tr>`;
+                return;
+            }
+
+            gridContainer.innerHTML = list.map(p => {
+                const totalCost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
+                const profit = (Number(p.sellPrice) || 0) - totalCost;
+                const roi = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(1) : 0;
+
+                return `
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <!-- Card Header -->
+                        <div class="p-5 border-b border-slate-100 flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                                    ${getTypeName(p.type)}
+                                </span>
+                                <h4 class="text-base font-bold text-slate-900 mt-2 line-clamp-1" title="${p.name}">${p.name}</h4>
+                                <p class="text-xs text-slate-500 mt-0.5 flex items-center">
+                                    <i class="fa-solid fa-location-dot text-slate-400 mr-1.5"></i> ${p.address}
+                                </p>
+                            </div>
+                            <div class="shrink-0">
+                                ${getStatusBadge(p.status)}
+                            </div>
+                        </div>
+
+                        <!-- Card Metrics -->
+                        <div class="p-5 space-y-3 text-xs">
+                            <div class="flex justify-between items-center text-slate-600">
+                                <span>Diện tích:</span>
+                                <span class="font-bold text-slate-800">${p.area} m²</span>
+                            </div>
+                            <div class="flex justify-between items-center text-slate-600">
+                                <span>Pháp lý:</span>
+                                <span class="font-semibold text-slate-700">${p.legal}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-slate-600">
+                                <span>Tổng vốn đầu tư:</span>
+                                <span class="font-semibold text-slate-800">${formatVND(totalCost)}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-slate-600">
+                                <span>Giá bán kỳ vọng:</span>
+                                <span class="font-bold text-blue-600 text-sm">${formatVND(p.sellPrice)}</span>
+                            </div>
+
+                            <!-- ROI & Lợi Nhuận Box -->
+                            <div class="mt-3 bg-emerald-50 rounded-xl p-3 border border-emerald-100 flex justify-between items-center">
+                                <div>
+                                    <span class="text-[11px] text-emerald-800 font-medium">Lợi Nhuận Dự Kiến:</span>
+                                    <p class="font-bold text-emerald-700 text-sm">${formatShortVND(profit)}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[11px] text-emerald-800 font-medium">ROI Kỳ Vọng:</span>
+                                    <p class="font-black text-emerald-700 text-base">${roi}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Actions Footer -->
+                    <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex justify-end space-x-2">
+                        <button onclick="editProperty('${p.id}')" class="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i>Sửa
+                        </button>
+                        <button onclick="deleteProperty('${p.id}')" class="px-3 py-1.5 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-lg text-xs font-semibold transition flex items-center">
+                            <i class="fa-solid fa-trash-can mr-1"></i>Xóa
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            // Render Table View
+            tableBody.innerHTML = list.map(p => {
+                const totalCost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
+                const profit = (Number(p.sellPrice) || 0) - totalCost;
+                const roi = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(1) : 0;
+
+                return `
+                <tr class="hover:bg-slate-50/70 transition">
+                    <td class="p-4">
+                        <div class="font-bold text-slate-900">${p.name}</div>
+                        <div class="text-xs text-slate-400 mt-0.5"><i class="fa-solid fa-location-dot mr-1"></i>${p.address}</div>
+                    </td>
+                    <td class="p-4">
+                        <div class="text-xs font-semibold text-blue-700">${getTypeName(p.type)}</div>
+                        <div class="text-xs text-slate-500">${p.legal}</div>
+                    </td>
+                    <td class="p-4 font-semibold text-slate-700">${p.area} m²</td>
+                    <td class="p-4 text-right font-semibold text-slate-800">${formatShortVND(totalCost)}</td>
+                    <td class="p-4 text-right font-bold text-blue-600">${formatShortVND(p.sellPrice)}</td>
+                    <td class="p-4 text-right">
+                        <div class="font-bold text-emerald-600">+${formatShortVND(profit)}</div>
+                        <div class="text-[11px] font-black text-amber-600">${roi}%</div>
+                    </td>
+                    <td class="p-4 text-center">${getStatusBadge(p.status)}</td>
+                    <td class="p-4 text-center whitespace-nowrap">
+                        <button onclick="editProperty('${p.id}')" class="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Sửa">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteProperty('${p.id}')" class="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition ml-1" title="Xóa">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // Tự động tính toán khi nhập form
+        function calculateFinancials() {
+            const buyPrice = Number(document.getElementById('propBuyPrice').value) || 0;
+            const extraCost = Number(document.getElementById('propExtraCost').value) || 0;
+            const sellPrice = Number(document.getElementById('propSellPrice').value) || 0;
+
+            // Cập nhật text gợi ý dạng tiền
+            document.getElementById('propBuyPriceHelper').innerText = formatVND(buyPrice);
+            document.getElementById('propExtraCostHelper').innerText = formatVND(extraCost);
+            document.getElementById('propSellPriceHelper').innerText = formatVND(sellPrice);
+
+            const totalCost = buyPrice + extraCost;
+            const profit = sellPrice - totalCost;
+            const roi = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('previewTotalCost').innerText = formatShortVND(totalCost);
+            document.getElementById('previewProfit').innerText = (profit >= 0 ? '+' : '') + formatShortVND(profit);
+            document.getElementById('previewProfit').className = `text-sm font-bold ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+            document.getElementById('previewROI').innerText = `${roi}%`;
+        }
+
+        // Mở / Đóng Modal BĐS
+        function openPropertyModal(editItem = null) {
+            const modal = document.getElementById('propertyModal');
+            const form = document.getElementById('propertyForm');
+            form.reset();
+
+            if (editItem) {
+                document.getElementById('propModalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-blue-400 mr-2"></i> Chỉnh Sửa Bất Động Sản';
+                document.getElementById('propId').value = editItem.id;
+                document.getElementById('propName').value = editItem.name;
+                document.getElementById('propType').value = editItem.type;
+                document.getElementById('propAddress').value = editItem.address;
+                document.getElementById('propArea').value = editItem.area;
+                document.getElementById('propBuyPrice').value = editItem.buyPrice;
+                document.getElementById('propExtraCost').value = editItem.extraCost;
+                document.getElementById('propSellPrice').value = editItem.sellPrice;
+                document.getElementById('propLegal').value = editItem.legal;
+                document.getElementById('propStatus').value = editItem.status;
+            } else {
+                document.getElementById('propModalTitle').innerHTML = '<i class="fa-solid fa-house-chimney text-blue-400 mr-2"></i> Thêm Bất Động Sản Mới';
+                document.getElementById('propId').value = '';
+                document.getElementById('propExtraCost').value = 0;
+            }
+
+            calculateFinancials();
+            modal.classList.remove('hidden');
+        }
+
+        function closePropertyModal() {
+            document.getElementById('propertyModal').classList.add('hidden');
+        }
+
+        function handlePropertySubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('propId').value;
+            const propData = {
+                id: id || 'prop-' + Date.now(),
+                name: document.getElementById('propName').value.trim(),
+                type: document.getElementById('propType').value,
+                address: document.getElementById('propAddress').value.trim(),
+                area: Number(document.getElementById('propArea').value),
+                buyPrice: Number(document.getElementById('propBuyPrice').value),
+                extraCost: Number(document.getElementById('propExtraCost').value),
+                sellPrice: Number(document.getElementById('propSellPrice').value),
+                legal: document.getElementById('propLegal').value,
+                status: document.getElementById('propStatus').value
+            };
+
+            if (id) {
+                const index = properties.findIndex(p => p.id === id);
+                if (index !== -1) properties[index] = propData;
+            } else {
+                properties.unshift(propData);
+            }
+
+            saveData();
+            closePropertyModal();
+        }
+
+        function editProperty(id) {
+            const item = properties.find(p => p.id === id);
+            if (item) openPropertyModal(item);
+        }
+
+        function deleteProperty(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa bất động sản này?")) {
+                properties = properties.filter(p => p.id !== id);
+                saveData();
+            }
+        }
+
+        /* =====================================
+           7. KHÁCH HÀNG & SALES CRM
+           ===================================== */
+        function getFilteredCustomers() {
+            const search = document.getElementById('crm-filter-search')?.value.toLowerCase().trim() || '';
+            const statusFilter = document.getElementById('crm-filter-status')?.value || 'all';
+
+            return customers.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(search) || c.phone.includes(search);
+                const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+        }
+
+        function renderCustomers() {
+            const list = getFilteredCustomers();
+            const tbody = document.getElementById('crm-table-body');
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-400">Không tìm thấy khách hàng nào.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map(c => {
+                const linkedProp = properties.find(p => p.id === c.propertyId);
+                const propBadge = linkedProp 
+                    ? `<span class="inline-flex items-center text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded-md" title="${linkedProp.name}">
+                         <i class="fa-solid fa-building mr-1"></i>${linkedProp.name.length > 20 ? linkedProp.name.substring(0,20)+'...' : linkedProp.name}
+                       </span>`
+                    : `<span class="text-xs text-slate-400">Chưa gắn BĐS</span>`;
+
+                return `
+                <tr class="hover:bg-slate-50/70 transition">
+                    <td class="p-4">
+                        <div class="font-bold text-slate-900">${c.name}</div>
+                        ${c.notes ? `<div class="text-[11px] text-slate-400 italic line-clamp-1 max-w-xs mt-0.5">${c.notes}</div>` : ''}
+                    </td>
+                    <td class="p-4">
+                        <a href="tel:${c.phone}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-xs bg-slate-100 hover:bg-blue-50 px-2.5 py-1 rounded-lg">
+                            <i class="fa-solid fa-phone mr-1.5 text-[11px]"></i>${c.phone}
+                        </a>
+                    </td>
+                    <td class="p-4 text-xs font-medium text-slate-700">
+                        ${c.demand === 'dau_tu' ? '<span class="text-amber-600 font-bold"><i class="fa-solid fa-money-bill-trend-up mr-1"></i>Đầu tư</span>' : '<span class="text-blue-600 font-bold"><i class="fa-solid fa-house mr-1"></i>Mua để ở</span>'}
+                    </td>
+                    <td class="p-4 text-right font-bold text-slate-900 text-sm">
+                        ${formatShortVND(c.budget)}
+                    </td>
+                    <td class="p-4">
+                        ${propBadge}
+                    </td>
+                    <td class="p-4 text-center">
+                        ${getCrmStatusBadge(c.status)}
+                    </td>
+                    <td class="p-4 text-center whitespace-nowrap">
+                        <button onclick="editCustomer('${c.id}')" class="p-2 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="Sửa">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteCustomer('${c.id}')" class="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition ml-1" title="Xóa">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function populateCustomerPropertySelect(selectedId = '') {
+            const select = document.getElementById('crmPropertyId');
+            select.innerHTML = '<option value="">-- Chưa gắn BĐS cụ thể --</option>' +
+                properties.map(p => `
+                    <option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>
+                        ${p.name} (${formatShortVND(p.sellPrice)})
+                    </option>
+                `).join('');
+        }
+
+        function openCustomerModal(editItem = null) {
+            const modal = document.getElementById('customerModal');
+            const form = document.getElementById('customerForm');
+            form.reset();
+
+            populateCustomerPropertySelect(editItem ? editItem.propertyId : '');
+
+            // Listener cho ô Ngân Sách
+            const budgetInput = document.getElementById('crmBudget');
+            budgetInput.oninput = () => {
+                document.getElementById('crmBudgetHelper').innerText = formatVND(Number(budgetInput.value) || 0);
+            };
+
+            if (editItem) {
+                document.getElementById('crmModalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-emerald-400 mr-2"></i> Cập Nhật Khách Hàng';
+                document.getElementById('crmId').value = editItem.id;
+                document.getElementById('crmName').value = editItem.name;
+                document.getElementById('crmPhone').value = editItem.phone;
+                document.getElementById('crmDemand').value = editItem.demand;
+                document.getElementById('crmBudget').value = editItem.budget;
+                document.getElementById('crmStatus').value = editItem.status;
+                document.getElementById('crmPropertyId').value = editItem.propertyId || '';
+                document.getElementById('crmNotes').value = editItem.notes || '';
+                document.getElementById('crmBudgetHelper').innerText = formatVND(editItem.budget);
+            } else {
+                document.getElementById('crmModalTitle').innerHTML = '<i class="fa-solid fa-user-plus text-emerald-400 mr-2"></i> Thêm Khách Hàng Tiềm Năng';
+                document.getElementById('crmId').value = '';
+                document.getElementById('crmBudgetHelper').innerText = '0 đ';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').classList.add('hidden');
+        }
+
+        function handleCustomerSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('crmId').value;
+            const customerData = {
+                id: id || 'cust-' + Date.now(),
+                name: document.getElementById('crmName').value.trim(),
+                phone: document.getElementById('crmPhone').value.trim(),
+                demand: document.getElementById('crmDemand').value,
+                budget: Number(document.getElementById('crmBudget').value),
+                status: document.getElementById('crmStatus').value,
+                propertyId: document.getElementById('crmPropertyId').value,
+                notes: document.getElementById('crmNotes').value.trim()
+            };
+
+            if (id) {
+                const index = customers.findIndex(c => c.id === id);
+                if (index !== -1) customers[index] = customerData;
+            } else {
+                customers.unshift(customerData);
+            }
+
+            saveData();
+            closeCustomerModal();
+        }
+
+        function editCustomer(id) {
+            const item = customers.find(c => c.id === id);
+            if (item) openCustomerModal(item);
+        }
+
+        function deleteCustomer(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
+                customers = customers.filter(c => c.id !== id);
+                saveData();
+            }
+        }
+
+        /* =====================================
+           8. KHỞI TẠO ỨNG DỤNG LẦN ĐẦU (INIT)
+           ===================================== */
+        function refreshApp() {
+            renderDashboard();
+            renderProperties();
+            renderCustomers();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            refreshApp();
+        });
+    </script>
+</body>
+</html>
