@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BĐS Master - Quản Trị Đầu Tư, CRM & Tính Dòng Tiền</title>
+    <title>BĐS Master Pro - Quản Trị Đầu Tư, CRM & Trợ Lý AI</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons 6 CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -25,93 +25,106 @@
         }
     </script>
     <style>
-        /* Tùy chỉnh thanh cuộn đẹp mắt */
+        /* Tùy biến thanh cuộn hiện đại */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- HEADER / NAVIGATION BAR -->
+    <!-- ============================================== -->
+    <!-- HEADER & THANH ĐIỀU HƯỚNG TỔNG THỂ             -->
+    <!-- ============================================== -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo & Brand -->
-                <div class="flex items-center space-x-3">
-                    <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md">
-                        <i class="fa-solid fa-building-user text-xl"></i>
+                <!-- Logo & Thương hiệu -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="bg-gradient-to-tr from-blue-700 to-indigo-600 text-white p-2.5 rounded-xl shadow-md">
+                        <i class="fa-solid fa-building-shield text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent">BĐS MASTER</h1>
-                        <p class="text-[11px] text-slate-500 font-medium">Đầu Tư & Sales CRM</p>
+                        <h1 class="text-xl font-black bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent">BĐS MASTER PRO</h1>
+                        <p class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Đầu Tư • CRM • Trợ Lý AI</p>
                     </div>
                 </div>
 
-                <!-- Navigation Tabs (Desktop) -->
-                <nav class="hidden md:flex space-x-1 border border-slate-200 bg-slate-100 p-1 rounded-xl">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-blue-700 bg-white shadow-sm">
-                        <i class="fa-solid fa-chart-pie mr-2"></i>Bảng Điều Khiển
+                <!-- 5 Nút Tab Điều Hướng (Desktop) -->
+                <nav class="hidden lg:flex space-x-1 border border-slate-200 bg-slate-100 p-1 rounded-xl">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-blue-700 bg-white shadow-sm flex items-center">
+                        <i class="fa-solid fa-chart-pie mr-1.5"></i>Bảng Điều Khiển
                     </button>
-                    <button onclick="switchTab('properties')" id="nav-properties" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
-                        <i class="fa-solid fa-hotel mr-2"></i>Danh Mục BĐS
+                    <button onclick="switchTab('properties')" id="nav-properties" class="tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center">
+                        <i class="fa-solid fa-hotel mr-1.5"></i>Danh Mục BĐS
                     </button>
-                    <button onclick="switchTab('crm')" id="nav-crm" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
-                        <i class="fa-solid fa-users-gear mr-2"></i>Khách Hàng (CRM)
+                    <button onclick="switchTab('crm')" id="nav-crm" class="tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center">
+                        <i class="fa-solid fa-users-gear mr-1.5"></i>Khách Hàng (CRM)
                     </button>
-                    <button onclick="switchTab('calculator')" id="nav-calculator" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
-                        <i class="fa-solid fa-calculator mr-2"></i>Tính Vay & Dòng Tiền
+                    <button onclick="switchTab('calculator')" id="nav-calculator" class="tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center">
+                        <i class="fa-solid fa-calculator mr-1.5"></i>Tính Vay & Dòng Tiền
+                    </button>
+                    <button onclick="switchTab('ai')" id="nav-ai" class="tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center">
+                        <i class="fa-solid fa-robot mr-1.5 text-indigo-500"></i>Trợ Lý AI
                     </button>
                 </nav>
 
-                <!-- Data Backup / Actions -->
+                <!-- Sao lưu & Phục hồi dữ liệu -->
                 <div class="flex items-center space-x-2">
-                    <button onclick="exportDataJSON()" title="Xuất dữ liệu JSON" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition flex items-center">
-                        <i class="fa-solid fa-download mr-1.5"></i> <span class="hidden sm:inline">Export</span>
+                    <button onclick="exportDataJSON()" title="Xuất dữ liệu dự phòng JSON" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg border border-slate-300 transition flex items-center shadow-xs">
+                        <i class="fa-solid fa-download mr-1.5"></i> <span class="hidden sm:inline">Xuất JSON</span>
                     </button>
-                    <label title="Nhập file JSON" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition cursor-pointer flex items-center">
-                        <i class="fa-solid fa-upload mr-1.5"></i> <span class="hidden sm:inline">Import</span>
+                    <label title="Nhập file dữ liệu JSON" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg border border-slate-300 transition cursor-pointer flex items-center shadow-xs">
+                        <i class="fa-solid fa-upload mr-1.5"></i> <span class="hidden sm:inline">Nhập JSON</span>
                         <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importDataJSON(event)">
                     </label>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Navigation Tabs -->
-        <div class="flex md:hidden border-t border-slate-200 bg-white overflow-x-auto px-2 py-1 justify-around">
-            <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="text-xs font-semibold py-2 px-3 text-blue-600 border-b-2 border-blue-600 whitespace-nowrap">
+        <!-- 5 Tabs Điều Hướng Thu Gọn (Mobile & Tablet) -->
+        <div class="flex lg:hidden border-t border-slate-200 bg-white overflow-x-auto px-2 py-1 scrollbar-none justify-between space-x-1">
+            <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="text-xs font-bold py-2 px-2.5 text-blue-600 border-b-2 border-blue-600 whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie mr-1"></i>Thống Kê
             </button>
-            <button onclick="switchTab('properties')" id="mob-nav-properties" class="text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap">
+            <button onclick="switchTab('properties')" id="mob-nav-properties" class="text-xs font-semibold py-2 px-2.5 text-slate-600 whitespace-nowrap">
                 <i class="fa-solid fa-hotel mr-1"></i>BĐS
             </button>
-            <button onclick="switchTab('crm')" id="mob-nav-crm" class="text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap">
+            <button onclick="switchTab('crm')" id="mob-nav-crm" class="text-xs font-semibold py-2 px-2.5 text-slate-600 whitespace-nowrap">
                 <i class="fa-solid fa-users mr-1"></i>CRM
             </button>
-            <button onclick="switchTab('calculator')" id="mob-nav-calculator" class="text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap">
-                <i class="fa-solid fa-calculator mr-1"></i>Tính Vay
+            <button onclick="switchTab('calculator')" id="mob-nav-calculator" class="text-xs font-semibold py-2 px-2.5 text-slate-600 whitespace-nowrap">
+                <i class="fa-solid fa-calculator mr-1"></i>Tài Chính
+            </button>
+            <button onclick="switchTab('ai')" id="mob-nav-ai" class="text-xs font-semibold py-2 px-2.5 text-slate-600 whitespace-nowrap">
+                <i class="fa-solid fa-robot mr-1 text-indigo-500"></i>AI
             </button>
         </div>
     </header>
 
-    <!-- MAIN APP CONTAINER -->
+    <!-- KHUNG CHÍNH (MAIN VIEWPORT) -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
 
         <!-- ============================================== -->
         <!-- TAB 1: BẢNG ĐIỀU KHIỂN & PHÂN TÍCH ĐẦU TƯ     -->
         <!-- ============================================== -->
-        <section id="tab-dashboard" class="tab-content space-y-6">
-            <!-- Thẻ KPI -->
+        <section id="tab-dashboard" class="tab-content animate-fade-in space-y-6">
+            <!-- 5 Thẻ Chỉ Số KPI -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <!-- Tổng BĐS -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Tổng Số BĐS</p>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Tổng Số BĐS</p>
                         <h3 id="kpi-total-properties" class="text-2xl font-black text-slate-800 mt-1">0</h3>
-                        <p class="text-[11px] text-slate-500 mt-1"><span id="kpi-available-prop" class="font-bold text-blue-600">0</span> đang giao dịch</p>
+                        <p class="text-[11px] text-slate-500 mt-1"><span id="kpi-available-prop" class="font-bold text-blue-600">0</span> đang mở bán/cọc</p>
                     </div>
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fa-solid fa-landmark"></i>
                     </div>
                 </div>
@@ -119,11 +132,11 @@
                 <!-- Tổng vốn đầu tư -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Tổng Vốn Đầu Tư</p>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Tổng Vốn Đầu Tư</p>
                         <h3 id="kpi-total-investment" class="text-2xl font-black text-indigo-700 mt-1">0 đ</h3>
-                        <p class="text-[11px] text-slate-500 mt-1">Bao gồm giá mua & sửa chữa</p>
+                        <p class="text-[11px] text-slate-500 mt-1">Gồm giá mua & chi phí</p>
                     </div>
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fa-solid fa-vault"></i>
                     </div>
                 </div>
@@ -131,56 +144,56 @@
                 <!-- Dự kiến Lợi nhuận -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Dự Kiến Lợi Nhuận</p>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Lợi Nhuận Dự Kiến</p>
                         <h3 id="kpi-total-profit" class="text-2xl font-black text-emerald-600 mt-1">0 đ</h3>
-                        <p class="text-[11px] text-emerald-600 font-medium mt-1">Dựa trên giá bán kỳ vọng</p>
+                        <p class="text-[11px] text-emerald-600 font-semibold mt-1">Chênh lệch kỳ vọng</p>
                     </div>
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fa-solid fa-arrow-trend-up"></i>
                     </div>
                 </div>
 
-                <!-- Tỷ suất ROI -->
+                <!-- ROI Trung bình -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">ROI Trung Bình</p>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400">ROI Trung Bình</p>
                         <h3 id="kpi-avg-roi" class="text-2xl font-black text-amber-500 mt-1">0.0%</h3>
-                        <p class="text-[11px] text-slate-500 mt-1">Hiệu suất sinh lời kỳ vọng</p>
+                        <p class="text-[11px] text-slate-500 mt-1">Tỷ suất sinh lời kỳ vọng</p>
                     </div>
-                    <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fa-solid fa-percent"></i>
                     </div>
                 </div>
 
-                <!-- Khách hàng tiềm năng -->
+                <!-- Khách hàng CRM -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Khách Tiềm Năng</p>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Khách Hàng CRM</p>
                         <h3 id="kpi-total-customers" class="text-2xl font-black text-rose-600 mt-1">0</h3>
-                        <p class="text-[11px] text-slate-500 mt-1"><span id="kpi-active-customers" class="font-bold text-rose-500">0</span> đang tư vấn</p>
+                        <p class="text-[11px] text-slate-500 mt-1"><span id="kpi-active-customers" class="font-bold text-rose-500">0</span> đang chăm sóc</p>
                     </div>
-                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl">
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fa-solid fa-user-tag"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts Section -->
+            <!-- Khối 2 Biểu Đồ Chart.js -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Doughnut Chart: Phân bổ loại hình -->
+                <!-- Biểu đồ phân bổ loại hình BĐS (Doughnut) -->
                 <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-                    <h4 class="text-base font-bold text-slate-800 flex items-center mb-4">
-                        <i class="fa-solid fa-chart-pie text-blue-600 mr-2"></i> Phân Bổ BĐS Theo Loại Hình
+                    <h4 class="text-sm font-bold text-slate-800 flex items-center mb-4">
+                        <i class="fa-solid fa-chart-pie text-blue-600 mr-2"></i> Cơ Cấu BĐS Theo Loại Hình
                     </h4>
                     <div class="flex-1 relative min-h-[260px] flex items-center justify-center">
                         <canvas id="propertyTypeChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Bar Chart: Vốn Mua vs Kỳ Vọng Bán -->
+                <!-- Biểu đồ Giá mua vs Kỳ vọng bán (Bar Chart) -->
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-                    <h4 class="text-base font-bold text-slate-800 flex items-center mb-4">
-                        <i class="fa-solid fa-chart-column text-indigo-600 mr-2"></i> Vốn Đầu Tư vs Kỳ Vọng Bán (Triệu VNĐ)
+                    <h4 class="text-sm font-bold text-slate-800 flex items-center mb-4">
+                        <i class="fa-solid fa-chart-column text-indigo-600 mr-2"></i> So Sánh Giá Mua Vào vs Kỳ Vọng Bán (Triệu VNĐ)
                     </h4>
                     <div class="flex-1 relative min-h-[260px]">
                         <canvas id="investmentBarChart"></canvas>
@@ -192,20 +205,20 @@
         <!-- ============================================== -->
         <!-- TAB 2: QUẢN LÝ DANH MỤC BẤT ĐỘNG SẢN           -->
         <!-- ============================================== -->
-        <section id="tab-properties" class="tab-content hidden space-y-6">
-            <!-- Filter & Action Bar -->
+        <section id="tab-properties" class="tab-content hidden animate-fade-in space-y-6">
+            <!-- Thanh Công Cụ Lọc & Thao Tác -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-4 items-center justify-between">
                 <div class="flex flex-wrap flex-1 gap-3 w-full">
-                    <!-- Search Input -->
+                    <!-- Ô tìm kiếm -->
                     <div class="relative flex-1 min-w-[220px]">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input type="text" id="prop-filter-search" oninput="renderProperties()" placeholder="Tìm theo tên BĐS, địa chỉ..." 
+                        <input type="text" id="prop-filter-search" oninput="renderProperties()" placeholder="Tìm tên BĐS, địa chỉ..." 
                             class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <!-- Filter Loại Hình -->
+                    <!-- Lọc Loại Hình -->
                     <select id="prop-filter-type" onchange="renderProperties()" class="border border-slate-300 rounded-xl text-sm px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-700">
                         <option value="all">Tất cả loại hình</option>
                         <option value="dat_nen">Đất nền</option>
@@ -214,7 +227,7 @@
                         <option value="biet_thu">Biệt thự</option>
                     </select>
 
-                    <!-- Filter Trạng Thái -->
+                    <!-- Lọc Trạng Thái -->
                     <select id="prop-filter-status" onchange="renderProperties()" class="border border-slate-300 rounded-xl text-sm px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-700">
                         <option value="all">Tất cả trạng thái</option>
                         <option value="dang_ban">Đang bán</option>
@@ -224,29 +237,29 @@
                     </select>
                 </div>
 
-                <!-- Right Action Buttons -->
+                <!-- Nút Đổi Chế Độ Xem & Thêm Mới -->
                 <div class="flex items-center space-x-3 w-full lg:w-auto justify-end">
                     <div class="border border-slate-200 bg-slate-100 p-1 rounded-xl flex">
-                        <button onclick="setPropertyView('grid')" id="view-grid-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-blue-700 shadow-sm">
+                        <button onclick="setPropertyView('grid')" id="view-grid-btn" title="Dạng Lưới Thẻ" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm">
                             <i class="fa-solid fa-border-all"></i>
                         </button>
-                        <button onclick="setPropertyView('table')" id="view-table-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900">
+                        <button onclick="setPropertyView('table')" id="view-table-btn" title="Dạng Bảng" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900">
                             <i class="fa-solid fa-table-list"></i>
                         </button>
                     </div>
-                    <button onclick="openPropertyModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-md transition flex items-center">
-                        <i class="fa-solid fa-plus mr-2"></i>Thêm BĐS Mới
+                    <button onclick="openPropertyModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center whitespace-nowrap">
+                        <i class="fa-solid fa-plus mr-2"></i>Thêm BĐS
                     </button>
                 </div>
             </div>
 
-            <!-- Content Area: Grid Card View -->
+            <!-- Khu Vực Hiển Thị Thẻ Card -->
             <div id="properties-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-            <!-- Content Area: Table View -->
+            <!-- Khu Vực Hiển Thị Bảng (Table) -->
             <div id="properties-table-container" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-600">
-                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold border-b border-slate-200">
                         <tr>
                             <th class="p-4">Tên BĐS / Vị trí</th>
                             <th class="p-4">Loại hình / Pháp lý</th>
@@ -266,15 +279,15 @@
         <!-- ============================================== -->
         <!-- TAB 3: KHÁCH HÀNG & SALES CRM                 -->
         <!-- ============================================== -->
-        <section id="tab-crm" class="tab-content hidden space-y-6">
-            <!-- Filter & Action Bar CRM -->
+        <section id="tab-crm" class="tab-content hidden animate-fade-in space-y-6">
+            <!-- Thanh Tìm Kiếm & Nút Thêm Khách Hàng -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
                 <div class="flex flex-wrap flex-1 gap-3 w-full">
                     <div class="relative flex-1 min-w-[220px]">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input type="text" id="crm-filter-search" oninput="renderCustomers()" placeholder="Tìm khách hàng theo tên, số điện thoại..." 
+                        <input type="text" id="crm-filter-search" oninput="renderCustomers()" placeholder="Tìm khách theo tên, số điện thoại..." 
                             class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
@@ -282,27 +295,27 @@
                         <option value="all">Tất cả giai đoạn</option>
                         <option value="moi">Mới tiếp cận</option>
                         <option value="tu_van">Đang tư vấn</option>
+                        <option value="da_coc">Đã đặt cọc</option>
                         <option value="da_chot">Đã chốt thành công</option>
-                        <option value="tam_dung">Tạm dừng</option>
                     </select>
                 </div>
 
-                <button onclick="openCustomerModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-md transition flex items-center whitespace-nowrap">
+                <button onclick="openCustomerModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center whitespace-nowrap">
                     <i class="fa-solid fa-user-plus mr-2"></i>Thêm Khách Hàng
                 </button>
             </div>
 
-            <!-- Customers Table -->
+            <!-- Bảng Dữ Liệu Khách Hàng CRM -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-600">
-                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold border-b border-slate-200">
                         <tr>
                             <th class="p-4">Khách Hàng</th>
                             <th class="p-4">Số Điện Thoại</th>
                             <th class="p-4">Nhu Cầu</th>
                             <th class="p-4 text-right">Ngân Sách Tối Đa</th>
                             <th class="p-4">BĐS Quan Tâm</th>
-                            <th class="p-4 text-center">Trạng Thái</th>
+                            <th class="p-4 text-center">Giai Đoạn Chăm Sóc</th>
                             <th class="p-4 text-center">Thao Tác</th>
                         </tr>
                     </thead>
@@ -311,177 +324,139 @@
             </div>
         </section>
 
-        <!-- ============================================================== -->
-        <!-- TAB 4: TÍNH DÒNG TIỀN ĐẦU TƯ & LÃI SUẤT VAY (CALCULATOR)    -->
-        <!-- ============================================================== -->
-        <section id="tab-calculator" class="tab-content hidden space-y-6">
-            <!-- Header bar chọn nhanh BĐS -->
+        <!-- ============================================== -->
+        <!-- TAB 4: TÍNH DÒNG TIỀN & LÃI VAY NGÂN HÀNG      -->
+        <!-- ============================================== -->
+        <section id="tab-calculator" class="tab-content hidden animate-fade-in space-y-6">
+            <!-- Header chọn BĐS tự động -->
             <div class="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-6 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                     <h3 class="text-xl font-bold flex items-center">
-                        <i class="fa-solid fa-calculator text-amber-400 mr-3 text-2xl"></i> Tính Toán Dòng Tiền & Lãi Suất Vay Ngân Hàng
+                        <i class="fa-solid fa-calculator text-amber-400 mr-3 text-2xl"></i> Công Cụ Tính Tài Chính & Dòng Tiền BĐS
                     </h3>
-                    <p class="text-slate-300 text-xs mt-1">Lập kế hoạch đòn bẩy tài chính, tính lịch trả nợ & tỷ suất cho thuê (Rental Yield).</p>
+                    <p class="text-slate-300 text-xs mt-1">Mô phỏng đòn bẩy vay ngân hàng, tính chi tiết lịch trả nợ & tỷ suất sinh lời cho thuê (Yield).</p>
                 </div>
                 <div class="flex items-center space-x-2 w-full md:w-auto">
-                    <span class="text-xs text-slate-300 whitespace-nowrap font-medium">Chọn nhanh từ danh mục:</span>
+                    <span class="text-xs text-slate-300 font-semibold whitespace-nowrap">Áp dụng giá từ BĐS:</span>
                     <select id="calc-quick-property" onchange="applyPropertyToCalculator()" class="bg-white/10 text-white text-xs border border-white/20 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400">
-                        <option value="" class="text-slate-900">-- Nhập thủ công tự do --</option>
+                        <option value="" class="text-slate-900">-- Tự nhập dữ liệu mới --</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Khối Nhập Liệu & Kết Quả Tổng Quan -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Cột trái: Form nhập thông số Vay & Cho thuê -->
-                <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-                    <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center">
-                        <i class="fa-solid fa-sliders text-blue-600 mr-2"></i> 1. Thông Số Khoản Vay
-                    </h4>
+                <!-- CÔNG CỤ 1: TÍNH LÃI VAY NGÂN HÀNG -->
+                <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center">
+                            <i class="fa-solid fa-landmark-dome text-blue-600 mr-2 text-base"></i> Công Cụ 1: Tính Lãi Vay Ngân Hàng
+                        </h4>
+                        <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Đòn Bẩy Tài Chính</span>
+                    </div>
 
-                    <div class="space-y-4 text-xs">
-                        <!-- Giá trị BĐS -->
+                    <div class="space-y-3.5 text-xs">
                         <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="font-bold text-slate-700">Giá Trị Bất Động Sản (VNĐ)</label>
-                                <span id="calc-val-helper" class="text-blue-600 font-semibold">3.00 tỷ</span>
-                            </div>
-                            <input type="number" id="calc-property-value" value="3000000000" step="50000000" oninput="calculateMortgageAndCashflow()"
-                                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <label class="font-bold text-slate-700 block mb-1">Số Tiền Vay (VNĐ) *</label>
+                            <input type="number" id="calc-loan-amount" value="2000000000" step="50000000" oninput="runAllCalculations()"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <p id="calc-loan-amount-helper" class="text-[11px] text-slate-400 mt-1">2 tỷ đ</p>
                         </div>
 
-                        <!-- Tỷ lệ vay & Số tiền vay -->
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="font-bold text-slate-700 block mb-1">Tỷ Lệ Vay (%)</label>
-                                <input type="number" id="calc-loan-percent" value="70" min="0" max="100" oninput="updateLoanFromPercent()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <label class="font-bold text-slate-700 block mb-1">Lãi Suất Năm (%) *</label>
+                                <input type="number" id="calc-loan-rate" value="8.5" step="0.1" oninput="runAllCalculations()"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="font-bold text-slate-700 block mb-1">Số Tiền Vay (VNĐ)</label>
-                                <input type="number" id="calc-loan-amount" value="2100000000" step="10000000" oninput="updateLoanFromAmount()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <label class="font-bold text-slate-700 block mb-1">Thời Hạn Vay (Tháng) *</label>
+                                <input type="number" id="calc-loan-months" value="240" step="12" min="1" max="420" oninput="runAllCalculations()"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             </div>
                         </div>
 
-                        <!-- Thời gian vay & Phương thức trả nợ -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Thời Gian Vay (Năm)</label>
-                                <input type="number" id="calc-loan-years" value="20" min="1" max="35" oninput="calculateMortgageAndCashflow()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Phương Thức Trả</label>
-                                <select id="calc-loan-method" onchange="calculateMortgageAndCashflow()" class="w-full px-2.5 py-2 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                                    <option value="decreasing">Dư nợ giảm dần</option>
-                                    <option value="fixed">Góp đều (Niên kim)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Lãi suất ưu đãi & Thả nổi -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Lãi Suất Năm Đầu (%/năm)</label>
-                                <input type="number" id="calc-rate-promo" value="7.5" step="0.1" oninput="calculateMortgageAndCashflow()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Lãi Suất Thả Nổi (%/năm)</label>
-                                <input type="number" id="calc-rate-float" value="10.5" step="0.1" oninput="calculateMortgageAndCashflow()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                            </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Phương Thức Trả Nợ</label>
+                            <select id="calc-loan-method" onchange="runAllCalculations()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="decreasing">Dư nợ giảm dần (Gốc chia đều, lãi giảm dần)</option>
+                                <option value="fixed">Trả góp đều hàng tháng (Niên kim cố định)</option>
+                            </select>
                         </div>
                     </div>
 
-                    <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider pt-3 pb-2 border-b border-slate-100 flex items-center">
-                        <i class="fa-solid fa-coins text-emerald-600 mr-2"></i> 2. Dòng Tiền Khai Thác Cho Thuê
-                    </h4>
-
-                    <div class="space-y-4 text-xs">
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Tiền Thuê (VNĐ/tháng)</label>
-                                <input type="number" id="calc-rent-month" value="12000000" step="500000" oninput="calculateMortgageAndCashflow()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Tỷ Lệ Lấp Đầy (%)</label>
-                                <input type="number" id="calc-occupancy" value="95" min="0" max="100" oninput="calculateMortgageAndCashflow()"
-                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            </div>
+                    <!-- Kết Quả Tính Vay -->
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2 mt-4 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500">Trả tháng đầu (Gốc + Lãi):</span>
+                            <span id="res-loan-first-month" class="font-bold text-blue-700 text-sm">0 đ</span>
                         </div>
-
-                        <div>
-                            <label class="font-bold text-slate-700 block mb-1">Chi Phí Vận Hành / Quản Lý (VNĐ/tháng)</label>
-                            <input type="number" id="calc-oper-cost" value="1000000" step="100000" oninput="calculateMortgageAndCashflow()"
-                                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            <p class="text-[11px] text-slate-400 mt-1">Phí bảo trì, thuế môn bài, phí dịch vụ ban quản lý...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500">Tổng tiền lãi phải trả:</span>
+                            <span id="res-loan-total-interest" class="font-bold text-amber-600 text-sm">0 đ</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-200 pt-2 font-bold">
+                            <span class="text-slate-800">Tổng số tiền trả (Gốc + Lãi):</span>
+                            <span id="res-loan-total-paid" class="text-slate-900 text-sm">0 đ</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Cột phải: Thẻ kết quả chỉ số & Biểu đồ -->
-                <div class="lg:col-span-7 space-y-6">
-                    <!-- Thẻ Kết Quả Nổi Bật -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Trả Ngân Hàng Tháng Đầu -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <!-- CÔNG CỤ 2: TÍNH DÒNG TIỀN CHO THUÊ (RENTAL CASHFLOW) -->
+                <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center">
+                            <i class="fa-solid fa-coins text-emerald-600 mr-2 text-base"></i> Công Cụ 2: Dòng Tiền & Tỷ Suất Cho Thuê
+                        </h4>
+                        <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Khai Thác Cho Thuê</span>
+                    </div>
+
+                    <div class="space-y-3.5 text-xs">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Trả Ngân Hàng (Kỳ Đầu)</p>
-                                <h3 id="calc-res-first-pay" class="text-xl font-black text-slate-900 mt-1">0 đ</h3>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Gốc: <span id="calc-res-first-p" class="font-bold">0 đ</span> + Lãi: <span id="calc-res-first-i" class="font-bold">0 đ</span></p>
+                                <label class="font-bold text-slate-700 block mb-1">Giá Mua BĐS (VNĐ)</label>
+                                <input type="number" id="calc-rent-buyprice" value="3000000000" step="50000000" oninput="runAllCalculations()"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                             </div>
-                            <div class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-calendar-check"></i>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Chi Phí Cải Tạo/Nội Thất</label>
+                                <input type="number" id="calc-rent-renovation" value="150000000" step="10000000" oninput="runAllCalculations()"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                             </div>
                         </div>
 
-                        <!-- Dòng Tiền Ròng Hàng Tháng -->
-                        <div id="calc-cashflow-card" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Dòng Tiền Ròng (Net Cashflow)</p>
-                                <h3 id="calc-res-net-cashflow" class="text-xl font-black mt-1">0 đ</h3>
-                                <p id="calc-res-cashflow-desc" class="text-[11px] font-medium mt-0.5">Tiền thuê - Tiền trả ngân hàng</p>
+                                <label class="font-bold text-slate-700 block mb-1">Tiền Thuê Thu Về/Tháng</label>
+                                <input type="number" id="calc-rent-monthly-income" value="15000000" step="500000" oninput="runAllCalculations()"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                             </div>
-                            <div id="calc-cashflow-icon" class="w-11 h-11 rounded-xl flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-money-bill-transfer"></i>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Chi Phí Quản Lý/Vận Hành</label>
+                                <input type="number" id="calc-rent-monthly-cost" value="1500000" step="100000" oninput="runAllCalculations()"
+                                    class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                             </div>
                         </div>
 
-                        <!-- Tổng Lãi Phải Trả -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                            <div>
-                                <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Tổng Lãi Cả Chu Kỳ</p>
-                                <h3 id="calc-res-total-interest" class="text-xl font-black text-amber-600 mt-1">0 đ</h3>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Tổng Gốc + Lãi: <span id="calc-res-total-paid" class="font-bold text-slate-700">0 đ</span></p>
-                            </div>
-                            <div class="w-11 h-11 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-sack-dollar"></i>
-                            </div>
-                        </div>
-
-                        <!-- Tỷ Suất Cho Thuê (Rental Yield) -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                            <div>
-                                <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">Tỷ Suất Cho Thuê (Yield)</p>
-                                <h3 id="calc-res-rental-yield" class="text-xl font-black text-emerald-600 mt-1">0.0% / năm</h3>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Thu nhập cho thuê ròng / Giá BĐS</p>
-                            </div>
-                            <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </div>
+                        <!-- Thẻ trạng thái đòn bẩy kết hợp -->
+                        <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-100 flex items-center justify-between">
+                            <span class="text-slate-600 font-semibold">Khấu trừ tiền trả ngân hàng hàng tháng:</span>
+                            <span id="res-combined-loan-deduct" class="font-bold text-blue-700">0 đ</span>
                         </div>
                     </div>
 
-                    <!-- Biểu đồ cơ cấu trả nợ: Gốc vs Tổng Lãi -->
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <h4 class="text-sm font-bold text-slate-800 flex items-center mb-3">
-                            <i class="fa-solid fa-chart-pie text-indigo-600 mr-2"></i> Tỷ Trọng Vốn Gốc Vay vs Tổng Tiền Lãi Ngân Hàng
-                        </h4>
-                        <div class="relative h-[220px]">
-                            <canvas id="loanStructureChart"></canvas>
+                    <!-- Kết Quả Tính Dòng Tiền & Yield -->
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2 mt-4 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500">Dòng tiền ròng thực nhận:</span>
+                            <span id="res-rent-net-cashflow" class="font-black text-emerald-600 text-sm">0 đ / tháng</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500">Tỷ suất cho thuê gộp (Gross Yield):</span>
+                            <span id="res-rent-gross-yield" class="font-bold text-slate-800 text-sm">0.0% / năm</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-200 pt-2 font-bold">
+                            <span class="text-slate-800">Tỷ suất sinh lời ròng (Net Rental Yield):</span>
+                            <span id="res-rent-net-yield" class="text-emerald-700 text-sm">0.0% / năm</span>
                         </div>
                     </div>
                 </div>
@@ -489,32 +464,131 @@
 
             <!-- Bảng Lịch Trả Nợ Chi Tiết (Amortization Schedule) -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
                     <div>
-                        <h4 class="text-base font-bold text-slate-800 flex items-center">
-                            <i class="fa-solid fa-table text-blue-600 mr-2"></i> Lịch Trả Nợ Chi Tiết Hàng Tháng (36 Tháng Đầu)
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center">
+                            <i class="fa-solid fa-list-ol text-blue-600 mr-2"></i> Lịch Trình Khấu Hao Trả Nợ (Minh họa 24 tháng đầu)
                         </h4>
-                        <p class="text-xs text-slate-400 mt-0.5">Bảng khấu hao minh họa chi tiết số tiền gốc, tiền lãi và dư nợ qua từng tháng.</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Chi tiết phân bổ tiền gốc, lãi suất và dư nợ còn lại qua từng tháng.</p>
                     </div>
-                    <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200">
-                        <i class="fa-regular fa-clock mr-1"></i> Tính tự động thời gian thực
+                    <span class="text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200">
+                        <i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Tính toán thời gian thực
                     </span>
                 </div>
-                <div class="max-h-96 overflow-y-auto">
+                <div class="max-h-80 overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-600">
-                        <thead class="bg-slate-50 text-slate-500 uppercase font-bold sticky top-0 border-b border-slate-200">
+                        <thead class="bg-slate-100 text-slate-600 uppercase font-bold sticky top-0 border-b border-slate-200">
                             <tr>
-                                <th class="p-3 text-center">Kỳ (Tháng)</th>
+                                <th class="p-3 text-center">Kỳ</th>
                                 <th class="p-3 text-right">Dư Nợ Đầu Kỳ</th>
-                                <th class="p-3 text-right">Trả Gốc</th>
-                                <th class="p-3 text-right">Trả Lãi</th>
-                                <th class="p-3 text-right text-blue-700">Tổng Trả (Gốc + Lãi)</th>
+                                <th class="p-3 text-right">Tiền Gốc</th>
+                                <th class="p-3 text-right">Tiền Lãi</th>
+                                <th class="p-3 text-right text-blue-700">Tổng Trả/Tháng</th>
                                 <th class="p-3 text-right">Dư Nợ Còn Lại</th>
                             </tr>
                         </thead>
-                        <tbody id="loan-schedule-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+                        <tbody id="loan-amortization-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
                     </table>
                 </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 5: TRỢ LÝ AI TƯ VẤN ĐẦU TƯ (AI INVESTMENT ADVISOR)          -->
+        <!-- ============================================================== -->
+        <section id="tab-ai" class="tab-content hidden animate-fade-in space-y-6">
+            <!-- Khung Quét Danh Mục BĐS Tự Động -->
+            <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl border border-indigo-900/40">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-black tracking-wide flex items-center">
+                                AI INVESTMENT ADVISOR <span class="ml-2 text-[10px] bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded-full font-bold">PRO v2.5</span>
+                            </h3>
+                            <p class="text-xs text-slate-300 mt-0.5">Trợ lý phân tích dữ liệu danh mục BĐS thực tế & tư vấn chiến lược đầu tư tài chính.</p>
+                        </div>
+                    </div>
+                    <button onclick="refreshAIPortfolioAudit()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition flex items-center shadow">
+                        <i class="fa-solid fa-rotate mr-2"></i>Quét Lại Dữ Liệu
+                    </button>
+                </div>
+
+                <!-- Thẻ Phân Tích Danh Mục Tự Động -->
+                <div id="ai-portfolio-summary-card" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5"></div>
+            </div>
+
+            <!-- 4 Nút Kịch Bản Tư Vấn Nhanh (Quick Prompts) -->
+            <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 flex items-center">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500 mr-2"></i> Kịch Bản Phân Tích Chuyên Sâu Nhanh
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <button onclick="triggerQuickPrompt('risk')" class="p-3.5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-400 rounded-2xl text-left transition shadow-xs group">
+                        <div class="flex items-center space-x-2 text-rose-600 text-xs font-bold mb-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>1. Phân Tích Rủi Ro</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">Đánh giá pháp lý, thanh khoản và rủi ro dòng tiền danh mục.</p>
+                    </button>
+
+                    <button onclick="triggerQuickPrompt('profit')" class="p-3.5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-400 rounded-2xl text-left transition shadow-xs group">
+                        <div class="flex items-center space-x-2 text-emerald-600 text-xs font-bold mb-1">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>2. Chiến Lược Chốt Lời</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">BĐS nào đã đạt đỉnh kỳ vọng và nên chốt lời tái cơ cấu?</p>
+                    </button>
+
+                    <button onclick="triggerQuickPrompt('leverage')" class="p-3.5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-400 rounded-2xl text-left transition shadow-xs group">
+                        <div class="flex items-center space-x-2 text-indigo-600 text-xs font-bold mb-1">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            <span>3. Đòn Bẩy Vay Vốn</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">Tỷ lệ vay an toàn và phương án cơ cấu nợ theo lãi suất.</p>
+                    </button>
+
+                    <button onclick="triggerQuickPrompt('rent_vs_sell')" class="p-3.5 bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-2xl text-left transition shadow-xs group">
+                        <div class="flex items-center space-x-2 text-amber-600 text-xs font-bold mb-1">
+                            <i class="fa-solid fa-arrows-split-up-and-left"></i>
+                            <span>4. Cho Thuê vs Bán</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">So sánh hiệu quả giữ lấy dòng tiền hay bán gom vốn lãi vốn.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Khung Chat AI Tương Tác Trực Tiếp -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col h-[520px] overflow-hidden">
+                <!-- Chat Header -->
+                <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-sparkles"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold leading-tight">Hội Thoại Trực Tiếp Cùng AI</h4>
+                            <p class="text-[10px] text-slate-400">Đã kết nối với dữ liệu BĐS & CRM trong hệ thống</p>
+                        </div>
+                    </div>
+                    <button onclick="clearAIChatHistory()" class="text-xs text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-broom mr-1"></i>Xóa đoạn chat
+                    </button>
+                </div>
+
+                <!-- Chat Box Content -->
+                <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50 text-xs"></div>
+
+                <!-- Chat Input Form -->
+                <form onsubmit="handleAIChatSubmit(event)" class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+                    <input type="text" id="ai-user-input" placeholder="Hỏi AI về chiến lược BĐS, tư vấn dòng tiền, deal đàm phán..."
+                        class="flex-1 px-4 py-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center shadow-md">
+                        <i class="fa-solid fa-paper-plane mr-1.5"></i>Gửi
+                    </button>
+                </form>
             </div>
         </section>
 
@@ -522,7 +596,7 @@
 
     <!-- FOOTER -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
-        Phần mềm Quản lý Bất Động Sản, Dòng Tiền & Sales CRM cá nhân • Dữ liệu lưu cục bộ tại Trình duyệt (localStorage)
+        BĐS Master Pro • Hệ Thống SPA Quản Lý Đầu Tư, CRM Bán Hàng & Cố Vấn AI • Bản quyền lưu trữ trình duyệt (localStorage)
     </footer>
 
     <!-- ============================================== -->
@@ -532,7 +606,7 @@
         <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden my-8 animate-fade-in">
             <!-- Modal Header -->
             <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
-                <h3 id="propModalTitle" class="text-base font-bold flex items-center">
+                <h3 id="propModalTitle" class="text-sm font-bold flex items-center">
                     <i class="fa-solid fa-house-chimney text-blue-400 mr-2"></i> Thêm Bất Động Sản Mới
                 </h3>
                 <button onclick="closePropertyModal()" class="text-slate-400 hover:text-white transition text-lg">
@@ -540,19 +614,17 @@
                 </button>
             </div>
 
-            <!-- Form -->
+            <!-- Form BĐS -->
             <form id="propertyForm" onsubmit="handlePropertySubmit(event)" class="p-6 space-y-4">
                 <input type="hidden" id="propId">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Tên BĐS -->
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tên Bất Động Sản *</label>
-                        <input type="text" id="propName" required placeholder="Ví dụ: Đất thổ cư KDC Long Hòa"
+                        <input type="text" id="propName" required placeholder="Ví dụ: Đất nền ven KCN Long Hậu"
                             class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <!-- Loại hình -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Loại Hình *</label>
                         <select id="propType" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -563,9 +635,8 @@
                         </select>
                     </div>
 
-                    <!-- Pháp lý -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Pháp Lý *</label>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tình Trạng Pháp Lý *</label>
                         <select id="propLegal" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             <option value="Sổ hồng riêng">Sổ hồng riêng</option>
                             <option value="Sổ đỏ riêng">Sổ đỏ</option>
@@ -574,82 +645,78 @@
                         </select>
                     </div>
 
-                    <!-- Địa chỉ -->
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Địa Chỉ / Vị Trí *</label>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Địa Chỉ / Vị Trí Cụ Thể *</label>
                         <input type="text" id="propAddress" required placeholder="Xã/Phường, Quận/Huyện, Tỉnh/TP"
                             class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <!-- Diện tích -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Diện Tích (m²) *</label>
-                        <input type="number" step="0.1" id="propArea" required placeholder="Ví dụ: 120"
+                        <input type="number" step="0.1" id="propArea" required placeholder="Ví dụ: 125"
                             class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <!-- Trạng thái -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Trạng Thái Giao Dịch *</label>
                         <select id="propStatus" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                             <option value="dang_ban">Đang bán</option>
                             <option value="da_coc">Đã cọc</option>
                             <option value="cho_thue">Cho thuê</option>
-                            <option value="da_ban">Đã bán hoàn tất</option>
+                            <option value="da_ban">Đã bán</option>
                         </select>
                     </div>
 
-                    <!-- Giá mua vào -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giá Mua Vào (VNĐ) *</label>
-                        <input type="number" id="propBuyPrice" oninput="calculateFinancials()" required placeholder="Ví dụ: 2500000000"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="number" id="propBuyPrice" oninput="calculatePropertyLiveMetrics()" required placeholder="Ví dụ: 2500000000"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         <p id="propBuyPriceHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
                     </div>
 
-                    <!-- Chi phí phát sinh -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Sửa Chữa / Pháp Lý (VNĐ)</label>
-                        <input type="number" id="propExtraCost" oninput="calculateFinancials()" value="0" placeholder="Ví dụ: 150000000"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Chi Phí Phát Sinh / Sửa Chữa (VNĐ)</label>
+                        <input type="number" id="propExtraCost" oninput="calculatePropertyLiveMetrics()" value="0" placeholder="Ví dụ: 100000000"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         <p id="propExtraCostHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
                     </div>
 
-                    <!-- Giá bán kỳ vọng -->
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giá Bán Kỳ Vọng (VNĐ) *</label>
-                        <input type="number" id="propSellPrice" oninput="calculateFinancials()" required placeholder="Ví dụ: 3200000000"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="number" id="propSellPrice" oninput="calculatePropertyLiveMetrics()" required placeholder="Ví dụ: 3200000000"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         <p id="propSellPriceHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
                     </div>
                 </div>
 
                 <!-- Bảng Tự Động Tính Toán Live Preview -->
-                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mt-2">
-                    <p class="text-xs font-bold text-blue-900 uppercase tracking-wide mb-2">Bảng Tính Tài Chính Dự Kiến Tự Động</p>
+                <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 mt-2">
+                    <p class="text-[11px] font-bold text-blue-900 uppercase tracking-wide mb-2 flex items-center">
+                        <i class="fa-solid fa-calculator mr-1.5"></i> Kết Quả Tài Chính Dự Kiến Tự Động
+                    </p>
                     <div class="grid grid-cols-3 gap-2 text-center">
-                        <div class="bg-white p-2 rounded-xl border border-blue-100">
-                            <span class="block text-[11px] text-slate-500">Tổng Vốn Bỏ Ra</span>
-                            <span id="previewTotalCost" class="text-sm font-bold text-slate-800">0 đ</span>
+                        <div class="bg-white p-2.5 rounded-xl border border-blue-100 shadow-2xs">
+                            <span class="block text-[10px] text-slate-500">Tổng Vốn Bỏ Ra</span>
+                            <span id="previewTotalCost" class="text-xs font-bold text-slate-800">0 đ</span>
                         </div>
-                        <div class="bg-white p-2 rounded-xl border border-blue-100">
-                            <span class="block text-[11px] text-slate-500">Lợi Nhuận Ròng</span>
-                            <span id="previewProfit" class="text-sm font-bold text-emerald-600">0 đ</span>
+                        <div class="bg-white p-2.5 rounded-xl border border-blue-100 shadow-2xs">
+                            <span class="block text-[10px] text-slate-500">Lợi Nhuận Ròng</span>
+                            <span id="previewProfit" class="text-xs font-bold text-emerald-600">0 đ</span>
                         </div>
-                        <div class="bg-white p-2 rounded-xl border border-blue-100">
-                            <span class="block text-[11px] text-slate-500">Tỷ Suất Lời (ROI)</span>
-                            <span id="previewROI" class="text-sm font-bold text-amber-600">0.0%</span>
+                        <div class="bg-white p-2.5 rounded-xl border border-blue-100 shadow-2xs">
+                            <span class="block text-[10px] text-slate-500">Tỷ Suất Lời (ROI)</span>
+                            <span id="previewROI" class="text-xs font-bold text-amber-600">0.0%</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal Actions -->
                 <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                    <button type="button" onclick="closePropertyModal()" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
-                        Hủy Bỏ
+                    <button type="button" onclick="closePropertyModal()" class="px-5 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+                        Đóng
                     </button>
-                    <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition">
-                        Lưu Thông Tin
+                    <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition">
+                        Lưu Bất Động Sản
                     </button>
                 </div>
             </form>
@@ -657,13 +724,13 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- MODAL: THÊM / SỬA KHÁCH HÀNG (CRM)            -->
+    <!-- MODAL: THÊM / SỬA KHÁCH HÀNG CRM              -->
     <!-- ============================================== -->
     <div id="customerModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden my-8 animate-fade-in">
             <!-- Modal Header -->
             <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
-                <h3 id="crmModalTitle" class="text-base font-bold flex items-center">
+                <h3 id="crmModalTitle" class="text-sm font-bold flex items-center">
                     <i class="fa-solid fa-user-plus text-emerald-400 mr-2"></i> Thêm Khách Hàng Tiềm Năng
                 </h3>
                 <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white transition text-lg">
@@ -671,13 +738,13 @@
                 </button>
             </div>
 
-            <!-- Form -->
+            <!-- Form Khách Hàng -->
             <form id="customerForm" onsubmit="handleCustomerSubmit(event)" class="p-6 space-y-4">
                 <input type="hidden" id="crmId">
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Họ Và Tên Khách Hàng *</label>
-                    <input type="text" id="crmName" required placeholder="Ví dụ: Nguyễn Văn An"
+                    <input type="text" id="crmName" required placeholder="Ví dụ: Nguyễn Văn Hùng"
                         class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                 </div>
 
@@ -689,20 +756,20 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mục Đích Mua *</label>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nhu Cầu Mua *</label>
                         <select id="crmDemand" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            <option value="mua_o">Mua để ở</option>
                             <option value="dau_tu">Mua để đầu tư</option>
+                            <option value="mua_o">Mua để ở định cư</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giai Đoạn Chăm Sóc *</label>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Trạng Thái Chăm Sóc *</label>
                         <select id="crmStatus" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                             <option value="moi">Mới tiếp cận</option>
                             <option value="tu_van">Đang tư vấn</option>
+                            <option value="da_coc">Đã đặt cọc</option>
                             <option value="da_chot">Đã chốt thành công</option>
-                            <option value="tam_dung">Tạm dừng</option>
                         </select>
                     </div>
                 </div>
@@ -710,28 +777,28 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ngân Sách Tối Đa (VNĐ) *</label>
                     <input type="number" id="crmBudget" required placeholder="Ví dụ: 3000000000"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                     <p id="crmBudgetHelper" class="text-[11px] text-slate-400 mt-1">0 đ</p>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">BĐS Đang Quan Tâm</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">BĐS Khách Đang Quan Tâm</label>
                     <select id="crmPropertyId" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        <option value="">-- Chưa gắn BĐS cụ thể --</option>
+                        <option value="">-- Chưa chỉ định BĐS cụ thể --</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ghi Chú Trao Đổi</label>
-                    <textarea id="crmNotes" rows="2" placeholder="Ghi chú sở thích, thời gian rảnh, điều kiện vay..."
-                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ghi Chú Nhu Cầu</label>
+                    <textarea id="crmNotes" rows="2" placeholder="Sở thích hướng nhà, pháp lý, tài chính vay..."
+                        class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
                 </div>
 
                 <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
-                    <button type="button" onclick="closeCustomerModal()" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
-                        Hủy
+                    <button type="button" onclick="closeCustomerModal()" class="px-5 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+                        Đóng
                     </button>
-                    <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow transition">
+                    <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow transition">
                         Lưu Khách Hàng
                     </button>
                 </div>
@@ -740,38 +807,38 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- LOGIC JAVASCRIPT TOÀN BỘ ỨNG DỤNG              -->
+    <!-- TOÀN BỘ LOGIC JAVASCRIPT THỰC THI (VANILLA JS)  -->
     <!-- ============================================== -->
     <script>
-        /* =====================================
-           1. CẤU HÌNH & DỮ LIỆU BAN ĐẦU
-           ===================================== */
-        const STORAGE_KEY_PROPERTIES = 'bds_app_properties_v1';
-        const STORAGE_KEY_CUSTOMERS = 'bds_app_customers_v1';
+        /* ==============================================================
+           1. CẤU HÌNH & KHỞI TẠO BỘ DỮ LIỆU BAN ĐẦU
+           ============================================================== */
+        const STORAGE_KEY_PROPERTIES = 'bds_master_properties_v2';
+        const STORAGE_KEY_CUSTOMERS = 'bds_master_customers_v2';
+        const STORAGE_KEY_AICHOICE = 'bds_master_aichat_v2';
 
-        // Bộ dữ liệu mẫu khởi đầu
         const defaultProperties = [
             {
                 id: 'prop-1',
-                name: 'Đất Nền KDC Long Hậu',
+                name: 'Đất Nền Ven KCN Long Hậu',
                 type: 'dat_nen',
                 address: 'Huyện Cần Giuộc, Long An',
-                area: 100,
-                buyPrice: 1800000000,
-                extraCost: 50000000,
-                sellPrice: 2450000000,
+                area: 110,
+                buyPrice: 1900000000,
+                extraCost: 60000000,
+                sellPrice: 2550000000,
                 legal: 'Sổ đỏ riêng',
                 status: 'dang_ban'
             },
             {
                 id: 'prop-2',
-                name: 'Nhà Phố KDC Him Lam Kênh Tẻ',
+                name: 'Nhà Phố 3 Tầng KDC Him Lam',
                 type: 'nha_pho',
                 address: 'Phường Tân Hưng, Quận 7, TP.HCM',
-                area: 125,
-                buyPrice: 12500000000,
-                extraCost: 350000000,
-                sellPrice: 15800000000,
+                area: 120,
+                buyPrice: 11500000000,
+                extraCost: 400000000,
+                sellPrice: 14800000000,
                 legal: 'Sổ hồng riêng',
                 status: 'da_coc'
             },
@@ -779,25 +846,25 @@
                 id: 'prop-3',
                 name: 'Căn Hộ 2PN Vinhomes Grand Park',
                 type: 'can_ho',
-                address: 'Phường Long Bình, TP. Thủ Đức, TP.HCM',
-                area: 69,
-                buyPrice: 2600000000,
-                extraCost: 80000000,
+                address: 'Long Bình, TP. Thủ Đức, TP.HCM',
+                area: 68,
+                buyPrice: 2550000000,
+                extraCost: 75000000,
                 sellPrice: 3100000000,
                 legal: 'Hợp đồng mua bán',
-                status: 'dang_ban'
+                status: 'cho_thue'
             },
             {
                 id: 'prop-4',
-                name: 'Biệt Thự Đơn Lập Aqua City',
+                name: 'Biệt Thự Vườn Sinh Thái Đảo Sen',
                 type: 'biet_thu',
                 address: 'Long Hưng, Biên Hòa, Đồng Nai',
-                area: 300,
-                buyPrice: 18000000000,
-                extraCost: 500000000,
-                sellPrice: 23500000000,
+                area: 320,
+                buyPrice: 17500000000,
+                extraCost: 600000000,
+                sellPrice: 22800000000,
                 legal: 'Hợp đồng mua bán',
-                status: 'cho_thue'
+                status: 'dang_ban'
             }
         ];
 
@@ -810,39 +877,39 @@
                 budget: 3000000000,
                 status: 'tu_van',
                 propertyId: 'prop-1',
-                notes: 'Ưu tiên đất nền có sổ sẵn, thanh khoản nhanh.'
+                notes: 'Ưu tiên đất nền có pháp lý rõ ràng, biên lợi nhuận kỳ vọng > 20%.'
             },
             {
                 id: 'cust-2',
-                name: 'Lê Thị Thu Thảo',
-                phone: '0903987654',
+                name: 'Phạm Thị Mỹ Linh',
+                phone: '0909567890',
                 demand: 'mua_o',
-                budget: 16000000000,
-                status: 'tu_van',
+                budget: 15000000000,
+                status: 'da_coc',
                 propertyId: 'prop-2',
-                notes: 'Tìm nhà gần trường học quốc tế cho con, sẵn sàng đặt cọc trong tuần.'
+                notes: 'Đã xuống cọc 500 triệu, đang làm thủ tục công chứng sang tên.'
             },
             {
                 id: 'cust-3',
                 name: 'Nguyễn Thành Nam',
                 phone: '0918776655',
                 demand: 'dau_tu',
-                budget: 4000000000,
+                budget: 3500000000,
                 status: 'moi',
                 propertyId: 'prop-3',
-                notes: 'Quan tâm chung cư để cho thuê dòng tiền.'
+                notes: 'Quan tâm chung cư khai thác cho thuê dòng tiền ổn định.'
             }
         ];
 
-        // Biến trạng thái toàn cục (State)
         let properties = [];
         let customers = [];
-        let propertyViewMode = 'grid'; // 'grid' hoặc 'table'
+        let chatMessages = [];
+        let propertyViewMode = 'grid';
         let chartInstances = {};
 
-        /* =====================================
-           2. HÀM TIỆN ÍCH ĐỊNH DẠNG (FORMATTERS)
-           ===================================== */
+        /* ==============================================================
+           2. CÁC HÀM TIỆN ÍCH ĐỊNH DẠNG & BỔ TRỢ
+           ============================================================== */
         function formatVND(value) {
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value || 0);
         }
@@ -861,13 +928,13 @@
         }
 
         function getTypeName(type) {
-            const types = {
+            const map = {
                 'dat_nen': 'Đất nền',
                 'nha_pho': 'Nhà phố',
                 'can_ho': 'Căn hộ',
                 'biet_thu': 'Biệt thự'
             };
-            return types[type] || type;
+            return map[type] || type;
         }
 
         function getStatusBadge(status) {
@@ -888,51 +955,52 @@
         function getCrmStatusBadge(status) {
             switch(status) {
                 case 'moi':
-                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700"><i class="fa-solid fa-star mr-1 text-slate-400"></i>Mới</span>`;
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700"><i class="fa-regular fa-star mr-1 text-slate-400"></i>Mới</span>`;
                 case 'tu_van':
                     return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700"><i class="fa-solid fa-comments mr-1"></i>Đang tư vấn</span>`;
+                case 'da_coc':
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700"><i class="fa-solid fa-handshake-simple mr-1"></i>Đã cọc</span>`;
                 case 'da_chot':
-                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700"><i class="fa-solid fa-award mr-1"></i>Đã chốt</span>`;
-                case 'tam_dung':
-                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700"><i class="fa-solid fa-circle-pause mr-1"></i>Tạm dừng</span>`;
+                    return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700"><i class="fa-solid fa-trophy mr-1"></i>Đã chốt</span>`;
                 default:
                     return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">${status}</span>`;
             }
         }
 
-        /* =====================================
-           3. QUẢN LÝ DỮ LIỆU & LOCAL STORAGE
-           ===================================== */
-        function loadData() {
+        /* ==============================================================
+           3. ĐỒNG BỘ VÀ LƯU TRỮ LOCALSTORAGE & JSON BACKUP
+           ============================================================== */
+        function loadDataFromStorage() {
             try {
                 const storedProps = localStorage.getItem(STORAGE_KEY_PROPERTIES);
                 const storedCusts = localStorage.getItem(STORAGE_KEY_CUSTOMERS);
                 properties = storedProps ? JSON.parse(storedProps) : defaultProperties;
                 customers = storedCusts ? JSON.parse(storedCusts) : defaultCustomers;
             } catch (e) {
-                console.error("Lỗi khi tải từ localStorage", e);
+                console.error("Lỗi parse dữ liệu localStorage:", e);
                 properties = defaultProperties;
                 customers = defaultCustomers;
             }
         }
 
-        function saveData() {
+        function persistData() {
             localStorage.setItem(STORAGE_KEY_PROPERTIES, JSON.stringify(properties));
             localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(customers));
-            refreshApp();
+            refreshAllViews();
         }
 
         function exportDataJSON() {
-            const dataToExport = {
-                exportDate: new Date().toISOString(),
+            const payload = {
+                version: "2.5",
+                exportAt: new Date().toISOString(),
                 properties: properties,
                 customers: customers
             };
-            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `bds_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.download = `bds_master_pro_backup_${new Date().toISOString().slice(0, 10)}.json`;
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -944,71 +1012,71 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const imported = JSON.parse(e.target.result);
-                    if (imported.properties && Array.isArray(imported.properties)) {
-                        properties = imported.properties;
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.properties && Array.isArray(parsed.properties)) {
+                        properties = parsed.properties;
                     }
-                    if (imported.customers && Array.isArray(imported.customers)) {
-                        customers = imported.customers;
+                    if (parsed.customers && Array.isArray(parsed.customers)) {
+                        customers = parsed.customers;
                     }
-                    saveData();
-                    alert("Nhập dữ liệu thành công!");
+                    persistData();
+                    alert("Nhập dữ liệu sao lưu JSON thành công!");
                 } catch (err) {
-                    alert("File không hợp lệ hoặc bị lỗi cấu trúc JSON!");
+                    alert("Tệp JSON không hợp lệ hoặc cấu trúc dữ liệu bị lỗi!");
                 }
             };
             reader.readAsText(file);
             event.target.value = '';
         }
 
-        /* =====================================
-           4. CHUYỂN ĐỔI TAB GIAO DIỆN
-           ===================================== */
+        /* ==============================================================
+           4. ĐIỀU HƯỚNG TABS
+           ============================================================== */
         function switchTab(tabId) {
-            // Ẩn tất cả section tab
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
-            // Hiển thị tab được chọn
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) target.classList.remove('hidden');
+            const targetSection = document.getElementById(`tab-${tabId}`);
+            if (targetSection) targetSection.classList.remove('hidden');
 
-            // Cập nhật kiểu dáng nút tab desktop
+            // Cập nhật tab desktop
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900";
+                btn.className = "tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center";
             });
             const activeDesktopBtn = document.getElementById(`nav-${tabId}`);
             if (activeDesktopBtn) {
-                activeDesktopBtn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-blue-700 bg-white shadow-sm";
+                activeDesktopBtn.className = "tab-btn px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 text-blue-700 bg-white shadow-sm flex items-center";
             }
 
             // Cập nhật tab mobile
-            ['dashboard', 'properties', 'crm', 'calculator'].forEach(t => {
+            ['dashboard', 'properties', 'crm', 'calculator', 'ai'].forEach(t => {
                 const mobBtn = document.getElementById(`mob-nav-${t}`);
                 if (mobBtn) {
                     if (t === tabId) {
-                        mobBtn.className = "text-xs font-semibold py-2 px-3 text-blue-600 border-b-2 border-blue-600 whitespace-nowrap";
+                        mobBtn.className = "text-xs font-bold py-2 px-2.5 text-blue-600 border-b-2 border-blue-600 whitespace-nowrap";
                     } else {
-                        mobBtn.className = "text-xs font-medium py-2 px-3 text-slate-600 whitespace-nowrap";
+                        mobBtn.className = "text-xs font-semibold py-2 px-2.5 text-slate-600 whitespace-nowrap";
                     }
                 }
             });
 
+            // Gọi hàm render tương ứng
             if (tabId === 'dashboard') {
-                renderDashboard();
+                renderDashboardMetrics();
             } else if (tabId === 'properties') {
                 renderProperties();
             } else if (tabId === 'crm') {
                 renderCustomers();
             } else if (tabId === 'calculator') {
-                populateCalcPropertyDropdown();
-                calculateMortgageAndCashflow();
+                populateCalculatorDropdown();
+                runAllCalculations();
+            } else if (tabId === 'ai') {
+                refreshAIPortfolioAudit();
             }
         }
 
-        /* =====================================
-           5. DASHBOARD & BIỂU ĐỒ CHART.JS
-           ===================================== */
-        function renderDashboard() {
+        /* ==============================================================
+           5. TAB 1: BẢNG ĐIỀU KHIỂN & VẼ CHART.JS
+           ============================================================== */
+        function renderDashboardMetrics() {
             let totalInvestment = 0;
             let totalProfit = 0;
             let availableCount = 0;
@@ -1024,7 +1092,7 @@
             });
 
             const avgRoi = totalInvestment > 0 ? ((totalProfit / totalInvestment) * 100).toFixed(1) : '0.0';
-            const activeCustomers = customers.filter(c => c.status === 'tu_van' || c.status === 'moi').length;
+            const activeLeads = customers.filter(c => c.status === 'moi' || c.status === 'tu_van').length;
 
             document.getElementById('kpi-total-properties').innerText = properties.length;
             document.getElementById('kpi-available-prop').innerText = availableCount;
@@ -1032,14 +1100,17 @@
             document.getElementById('kpi-total-profit').innerText = (totalProfit >= 0 ? '+' : '') + formatShortVND(totalProfit);
             document.getElementById('kpi-avg-roi').innerText = `${avgRoi}%`;
             document.getElementById('kpi-total-customers').innerText = customers.length;
-            document.getElementById('kpi-active-customers').innerText = activeCustomers;
+            document.getElementById('kpi-active-customers').innerText = activeLeads;
 
-            renderTypeDoughnutChart();
-            renderInvestmentBarChart();
+            renderTypeDistributionChart();
+            renderBuyVsSellBarChart();
         }
 
-        function renderTypeDoughnutChart() {
-            const ctx = document.getElementById('propertyTypeChart').getContext('2d');
+        function renderTypeDistributionChart() {
+            const canvas = document.getElementById('propertyTypeChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
             const counts = { dat_nen: 0, nha_pho: 0, can_ho: 0, biet_thu: 0 };
             properties.forEach(p => {
                 if (counts[p.type] !== undefined) counts[p.type]++;
@@ -1063,18 +1134,23 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
                     cutout: '65%'
                 }
             });
         }
 
-        function renderInvestmentBarChart() {
-            const ctx = document.getElementById('investmentBarChart').getContext('2d');
-            const displayProps = properties.slice(0, 6);
-            const labels = displayProps.map(p => p.name.length > 15 ? p.name.substring(0, 15) + '...' : p.name);
-            const costData = displayProps.map(p => Math.round(((Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0)) / 1000000));
-            const sellData = displayProps.map(p => Math.round((Number(p.sellPrice) || 0) / 1000000));
+        function renderBuyVsSellBarChart() {
+            const canvas = document.getElementById('investmentBarChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const previewList = properties.slice(0, 6);
+            const labels = previewList.map(p => p.name.length > 14 ? p.name.substring(0, 14) + '...' : p.name);
+            const buyPrices = previewList.map(p => Math.round((Number(p.buyPrice) || 0) / 1000000));
+            const sellPrices = previewList.map(p => Math.round((Number(p.sellPrice) || 0) / 1000000));
 
             if (chartInstances.barChart) {
                 chartInstances.barChart.destroy();
@@ -1086,14 +1162,14 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Tổng Vốn (Triệu VNĐ)',
-                            data: costData,
+                            label: 'Giá Mua Vào (Triệu VNĐ)',
+                            data: buyPrices,
                             backgroundColor: '#94a3b8',
                             borderRadius: 6
                         },
                         {
-                            label: 'Giá Bán Kỳ Vọng (Triệu VNĐ)',
-                            data: sellData,
+                            label: 'Kỳ Vọng Bán (Triệu VNĐ)',
+                            data: sellPrices,
                             backgroundColor: '#2563eb',
                             borderRadius: 6
                         }
@@ -1106,9 +1182,7 @@
                         legend: { position: 'bottom' },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${new Intl.NumberFormat('vi-VN').format(context.raw)} tr`;
-                                }
+                                label: ctx => `${ctx.dataset.label}: ${new Intl.NumberFormat('vi-VN').format(ctx.raw)} tr`
                             }
                         }
                     },
@@ -1122,32 +1196,32 @@
             });
         }
 
-        /* =====================================
-           6. QUẢN LÝ BẤT ĐỘNG SẢN (PROPERTIES)
-           ===================================== */
+        /* ==============================================================
+           6. TAB 2: QUẢN LÝ BẤT ĐỘNG SẢN (PROPERTIES)
+           ============================================================== */
         function setPropertyView(mode) {
             propertyViewMode = mode;
             const gridBtn = document.getElementById('view-grid-btn');
             const tableBtn = document.getElementById('view-table-btn');
-            const gridCont = document.getElementById('properties-grid-container');
-            const tableCont = document.getElementById('properties-table-container');
+            const gridBox = document.getElementById('properties-grid-container');
+            const tableBox = document.getElementById('properties-table-container');
 
             if (mode === 'grid') {
-                gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-blue-700 shadow-sm";
-                tableBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900";
-                gridCont.classList.remove('hidden');
-                tableCont.classList.add('hidden');
+                gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm";
+                tableBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900";
+                gridBox.classList.remove('hidden');
+                tableBox.classList.add('hidden');
             } else {
-                tableBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-blue-700 shadow-sm";
-                gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900";
-                tableCont.classList.remove('hidden');
-                gridCont.classList.add('hidden');
+                tableBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm";
+                gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900";
+                tableBox.classList.remove('hidden');
+                gridBox.classList.add('hidden');
             }
             renderProperties();
         }
 
         function getFilteredProperties() {
-            const search = document.getElementById('prop-filter-search')?.value.toLowerCase().trim() || '';
+            const search = (document.getElementById('prop-filter-search')?.value || '').toLowerCase().trim();
             const typeFilter = document.getElementById('prop-filter-type')?.value || 'all';
             const statusFilter = document.getElementById('prop-filter-status')?.value || 'all';
 
@@ -1161,20 +1235,21 @@
 
         function renderProperties() {
             const list = getFilteredProperties();
-            const gridContainer = document.getElementById('properties-grid-container');
+            const gridBox = document.getElementById('properties-grid-container');
             const tableBody = document.getElementById('properties-table-body');
 
             if (list.length === 0) {
-                gridContainer.innerHTML = `
+                gridBox.innerHTML = `
                     <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-200">
                         <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
-                        <p class="text-slate-500 font-medium">Không tìm thấy bất động sản nào phù hợp.</p>
+                        <p class="text-slate-500 font-bold text-sm">Không tìm thấy bất động sản phù hợp.</p>
                     </div>`;
                 tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">Không có dữ liệu</td></tr>`;
                 return;
             }
 
-            gridContainer.innerHTML = list.map(p => {
+            // Dạng Lưới Card
+            gridBox.innerHTML = list.map(p => {
                 const totalCost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
                 const profit = (Number(p.sellPrice) || 0) - totalCost;
                 const roi = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(1) : 0;
@@ -1184,7 +1259,7 @@
                     <div>
                         <div class="p-5 border-b border-slate-100 flex justify-between items-start gap-2">
                             <div>
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md">
                                     ${getTypeName(p.type)}
                                 </span>
                                 <h4 class="text-base font-bold text-slate-900 mt-2 line-clamp-1" title="${p.name}">${p.name}</h4>
@@ -1192,12 +1267,10 @@
                                     <i class="fa-solid fa-location-dot text-slate-400 mr-1.5"></i> ${p.address}
                                 </p>
                             </div>
-                            <div class="shrink-0">
-                                ${getStatusBadge(p.status)}
-                            </div>
+                            <div class="shrink-0">${getStatusBadge(p.status)}</div>
                         </div>
 
-                        <div class="p-5 space-y-3 text-xs">
+                        <div class="p-5 space-y-2.5 text-xs">
                             <div class="flex justify-between items-center text-slate-600">
                                 <span>Diện tích:</span>
                                 <span class="font-bold text-slate-800">${p.area} m²</span>
@@ -1207,21 +1280,21 @@
                                 <span class="font-semibold text-slate-700">${p.legal}</span>
                             </div>
                             <div class="flex justify-between items-center text-slate-600">
-                                <span>Tổng vốn đầu tư:</span>
-                                <span class="font-semibold text-slate-800">${formatVND(totalCost)}</span>
+                                <span>Tổng chi phí đầu tư:</span>
+                                <span class="font-bold text-slate-800">${formatVND(totalCost)}</span>
                             </div>
                             <div class="flex justify-between items-center text-slate-600">
-                                <span>Giá bán kỳ vọng:</span>
+                                <span>Kỳ vọng bán ra:</span>
                                 <span class="font-bold text-blue-600 text-sm">${formatVND(p.sellPrice)}</span>
                             </div>
 
-                            <div class="mt-3 bg-emerald-50 rounded-xl p-3 border border-emerald-100 flex justify-between items-center">
+                            <div class="mt-3 bg-emerald-50/80 rounded-xl p-3 border border-emerald-100 flex justify-between items-center">
                                 <div>
-                                    <span class="text-[11px] text-emerald-800 font-medium">Lợi Nhuận Dự Kiến:</span>
-                                    <p class="font-bold text-emerald-700 text-sm">${formatShortVND(profit)}</p>
+                                    <span class="text-[10px] text-emerald-800 font-bold uppercase">Lợi Nhuận Ròng:</span>
+                                    <p class="font-black text-emerald-700 text-sm">${formatShortVND(profit)}</p>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-[11px] text-emerald-800 font-medium">ROI Kỳ Vọng:</span>
+                                    <span class="text-[10px] text-emerald-800 font-bold uppercase">ROI%:</span>
                                     <p class="font-black text-emerald-700 text-base">${roi}%</p>
                                 </div>
                             </div>
@@ -1229,35 +1302,35 @@
                     </div>
 
                     <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 flex justify-end space-x-2">
-                        <button onclick="editProperty('${p.id}')" class="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center">
+                        <button onclick="editProperty('${p.id}')" class="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition flex items-center shadow-2xs">
                             <i class="fa-solid fa-pen-to-square mr-1"></i>Sửa
                         </button>
-                        <button onclick="deleteProperty('${p.id}')" class="px-3 py-1.5 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-lg text-xs font-semibold transition flex items-center">
+                        <button onclick="deleteProperty('${p.id}')" class="px-3 py-1.5 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-lg text-xs font-bold transition flex items-center shadow-2xs">
                             <i class="fa-solid fa-trash-can mr-1"></i>Xóa
                         </button>
                     </div>
-                </div>
-                `;
+                </div>`;
             }).join('');
 
+            // Dạng Bảng Dữ Liệu
             tableBody.innerHTML = list.map(p => {
                 const totalCost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
                 const profit = (Number(p.sellPrice) || 0) - totalCost;
                 const roi = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(1) : 0;
 
                 return `
-                <tr class="hover:bg-slate-50/70 transition">
+                <tr class="hover:bg-slate-50/80 transition">
                     <td class="p-4">
                         <div class="font-bold text-slate-900">${p.name}</div>
                         <div class="text-xs text-slate-400 mt-0.5"><i class="fa-solid fa-location-dot mr-1"></i>${p.address}</div>
                     </td>
                     <td class="p-4">
-                        <div class="text-xs font-semibold text-blue-700">${getTypeName(p.type)}</div>
+                        <div class="text-xs font-bold text-blue-700">${getTypeName(p.type)}</div>
                         <div class="text-xs text-slate-500">${p.legal}</div>
                     </td>
-                    <td class="p-4 font-semibold text-slate-700">${p.area} m²</td>
-                    <td class="p-4 text-right font-semibold text-slate-800">${formatShortVND(totalCost)}</td>
-                    <td class="p-4 text-right font-bold text-blue-600">${formatShortVND(p.sellPrice)}</td>
+                    <td class="p-4 font-bold text-slate-700">${p.area} m²</td>
+                    <td class="p-4 text-right font-bold text-slate-800">${formatShortVND(totalCost)}</td>
+                    <td class="p-4 text-right font-black text-blue-600">${formatShortVND(p.sellPrice)}</td>
                     <td class="p-4 text-right">
                         <div class="font-bold text-emerald-600">+${formatShortVND(profit)}</div>
                         <div class="text-[11px] font-black text-amber-600">${roi}%</div>
@@ -1271,12 +1344,11 @@
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </td>
-                </tr>
-                `;
+                </tr>`;
             }).join('');
         }
 
-        function calculateFinancials() {
+        function calculatePropertyLiveMetrics() {
             const buyPrice = Number(document.getElementById('propBuyPrice').value) || 0;
             const extraCost = Number(document.getElementById('propExtraCost').value) || 0;
             const sellPrice = Number(document.getElementById('propSellPrice').value) || 0;
@@ -1291,7 +1363,7 @@
 
             document.getElementById('previewTotalCost').innerText = formatShortVND(totalCost);
             document.getElementById('previewProfit').innerText = (profit >= 0 ? '+' : '') + formatShortVND(profit);
-            document.getElementById('previewProfit').className = `text-sm font-bold ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+            document.getElementById('previewProfit').className = `text-xs font-bold ${profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
             document.getElementById('previewROI').innerText = `${roi}%`;
         }
 
@@ -1318,7 +1390,7 @@
                 document.getElementById('propExtraCost').value = 0;
             }
 
-            calculateFinancials();
+            calculatePropertyLiveMetrics();
             modal.classList.remove('hidden');
         }
 
@@ -1329,7 +1401,7 @@
         function handlePropertySubmit(event) {
             event.preventDefault();
             const id = document.getElementById('propId').value;
-            const propData = {
+            const payload = {
                 id: id || 'prop-' + Date.now(),
                 name: document.getElementById('propName').value.trim(),
                 type: document.getElementById('propType').value,
@@ -1343,33 +1415,33 @@
             };
 
             if (id) {
-                const index = properties.findIndex(p => p.id === id);
-                if (index !== -1) properties[index] = propData;
+                const idx = properties.findIndex(p => p.id === id);
+                if (idx !== -1) properties[idx] = payload;
             } else {
-                properties.unshift(propData);
+                properties.unshift(payload);
             }
 
-            saveData();
+            persistData();
             closePropertyModal();
         }
 
         function editProperty(id) {
-            const item = properties.find(p => p.id === id);
-            if (item) openPropertyModal(item);
+            const found = properties.find(p => p.id === id);
+            if (found) openPropertyModal(found);
         }
 
         function deleteProperty(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa bất động sản này?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa bất động sản này khỏi danh mục?")) {
                 properties = properties.filter(p => p.id !== id);
-                saveData();
+                persistData();
             }
         }
 
-        /* =====================================
-           7. KHÁCH HÀNG & SALES CRM
-           ===================================== */
+        /* ==============================================================
+           7. TAB 3: KHÁCH HÀNG & CRM BÁN HÀNG
+           ============================================================== */
         function getFilteredCustomers() {
-            const search = document.getElementById('crm-filter-search')?.value.toLowerCase().trim() || '';
+            const search = (document.getElementById('crm-filter-search')?.value || '').toLowerCase().trim();
             const statusFilter = document.getElementById('crm-filter-status')?.value || 'all';
 
             return customers.filter(c => {
@@ -1384,41 +1456,37 @@
             const tbody = document.getElementById('crm-table-body');
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-400">Không tìm thấy khách hàng nào.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-400 font-bold">Không tìm thấy khách hàng nào.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = list.map(c => {
                 const linkedProp = properties.find(p => p.id === c.propertyId);
                 const propBadge = linkedProp 
-                    ? `<span class="inline-flex items-center text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded-md" title="${linkedProp.name}">
-                         <i class="fa-solid fa-building mr-1"></i>${linkedProp.name.length > 20 ? linkedProp.name.substring(0,20)+'...' : linkedProp.name}
+                    ? `<span class="inline-flex items-center text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md" title="${linkedProp.name}">
+                         <i class="fa-solid fa-building mr-1.5 text-[11px]"></i>${linkedProp.name.length > 20 ? linkedProp.name.substring(0,20)+'...' : linkedProp.name}
                        </span>`
-                    : `<span class="text-xs text-slate-400">Chưa gắn BĐS</span>`;
+                    : `<span class="text-xs text-slate-400 font-medium">Chưa chọn BĐS</span>`;
 
                 return `
-                <tr class="hover:bg-slate-50/70 transition">
+                <tr class="hover:bg-slate-50/80 transition">
                     <td class="p-4">
                         <div class="font-bold text-slate-900">${c.name}</div>
                         ${c.notes ? `<div class="text-[11px] text-slate-400 italic line-clamp-1 max-w-xs mt-0.5">${c.notes}</div>` : ''}
                     </td>
                     <td class="p-4">
-                        <a href="tel:${c.phone}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-xs bg-slate-100 hover:bg-blue-50 px-2.5 py-1 rounded-lg">
+                        <a href="tel:${c.phone}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-xs bg-slate-100 hover:bg-blue-50 px-2.5 py-1 rounded-lg transition">
                             <i class="fa-solid fa-phone mr-1.5 text-[11px]"></i>${c.phone}
                         </a>
                     </td>
-                    <td class="p-4 text-xs font-medium text-slate-700">
-                        ${c.demand === 'dau_tu' ? '<span class="text-amber-600 font-bold"><i class="fa-solid fa-money-bill-trend-up mr-1"></i>Đầu tư</span>' : '<span class="text-blue-600 font-bold"><i class="fa-solid fa-house mr-1"></i>Mua để ở</span>'}
+                    <td class="p-4 text-xs font-bold">
+                        ${c.demand === 'dau_tu' ? '<span class="text-amber-600"><i class="fa-solid fa-money-bill-trend-up mr-1"></i>Đầu tư</span>' : '<span class="text-blue-600"><i class="fa-solid fa-house mr-1"></i>Mua để ở</span>'}
                     </td>
-                    <td class="p-4 text-right font-bold text-slate-900 text-sm">
+                    <td class="p-4 text-right font-black text-slate-900 text-sm">
                         ${formatShortVND(c.budget)}
                     </td>
-                    <td class="p-4">
-                        ${propBadge}
-                    </td>
-                    <td class="p-4 text-center">
-                        ${getCrmStatusBadge(c.status)}
-                    </td>
+                    <td class="p-4">${propBadge}</td>
+                    <td class="p-4 text-center">${getCrmStatusBadge(c.status)}</td>
                     <td class="p-4 text-center whitespace-nowrap">
                         <button onclick="editCustomer('${c.id}')" class="p-2 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="Sửa">
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -1427,17 +1495,16 @@
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </td>
-                </tr>
-                `;
+                </tr>`;
             }).join('');
         }
 
         function populateCustomerPropertySelect(selectedId = '') {
             const select = document.getElementById('crmPropertyId');
-            select.innerHTML = '<option value="">-- Chưa gắn BĐS cụ thể --</option>' +
+            select.innerHTML = '<option value="">-- Chưa chỉ định BĐS cụ thể --</option>' +
                 properties.map(p => `
                     <option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>
-                        ${p.name} (${formatShortVND(p.sellPrice)})
+                        ${p.name} - Giá: ${formatShortVND(p.sellPrice)}
                     </option>
                 `).join('');
         }
@@ -1481,7 +1548,7 @@
         function handleCustomerSubmit(event) {
             event.preventDefault();
             const id = document.getElementById('crmId').value;
-            const customerData = {
+            const payload = {
                 id: id || 'cust-' + Date.now(),
                 name: document.getElementById('crmName').value.trim(),
                 phone: document.getElementById('crmPhone').value.trim(),
@@ -1493,38 +1560,38 @@
             };
 
             if (id) {
-                const index = customers.findIndex(c => c.id === id);
-                if (index !== -1) customers[index] = customerData;
+                const idx = customers.findIndex(c => c.id === id);
+                if (idx !== -1) customers[idx] = payload;
             } else {
-                customers.unshift(customerData);
+                customers.unshift(payload);
             }
 
-            saveData();
+            persistData();
             closeCustomerModal();
         }
 
         function editCustomer(id) {
-            const item = customers.find(c => c.id === id);
-            if (item) openCustomerModal(item);
+            const found = customers.find(c => c.id === id);
+            if (found) openCustomerModal(found);
         }
 
         function deleteCustomer(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa thông tin khách hàng này?")) {
                 customers = customers.filter(c => c.id !== id);
-                saveData();
+                persistData();
             }
         }
 
         /* ==============================================================
-           8. TÍNH TOÁN DÒNG TIỀN ĐẦU TƯ & LÃI VAY NGÂN HÀNG (CALCULATOR)
+           8. TAB 4: TÍNH DÒNG TIỀN & LÃI VAY NGÂN HÀNG (CALCULATOR)
            ============================================================== */
-        function populateCalcPropertyDropdown() {
+        function populateCalculatorDropdown() {
             const select = document.getElementById('calc-quick-property');
             if (!select) return;
-            select.innerHTML = '<option value="" class="text-slate-900">-- Nhập thủ công tự do --</option>' +
+            select.innerHTML = '<option value="" class="text-slate-900">-- Tự nhập dữ liệu mới --</option>' +
                 properties.map(p => `
                     <option value="${p.id}" class="text-slate-900">
-                        ${p.name} - Giá: ${formatShortVND(p.buyPrice)}
+                        ${p.name} (Vốn: ${formatShortVND(p.buyPrice)})
                     </option>
                 `).join('');
         }
@@ -1534,253 +1601,327 @@
             const propId = select.value;
             if (!propId) return;
 
-            const selectedProp = properties.find(p => p.id === propId);
-            if (selectedProp) {
-                document.getElementById('calc-property-value').value = selectedProp.buyPrice;
-                updateLoanFromPercent();
+            const selected = properties.find(p => p.id === propId);
+            if (selected) {
+                const estimatedLoan = Math.round((Number(selected.buyPrice) || 0) * 0.7);
+                document.getElementById('calc-loan-amount').value = estimatedLoan;
+                document.getElementById('calc-rent-buyprice').value = selected.buyPrice;
+                document.getElementById('calc-rent-renovation').value = selected.extraCost || 50000000;
+                runAllCalculations();
             }
         }
 
-        function updateLoanFromPercent() {
-            const propVal = Number(document.getElementById('calc-property-value').value) || 0;
-            const percent = Number(document.getElementById('calc-loan-percent').value) || 0;
-            const loanAmount = Math.round(propVal * (percent / 100));
-            document.getElementById('calc-loan-amount').value = loanAmount;
-            calculateMortgageAndCashflow();
-        }
-
-        function updateLoanFromAmount() {
-            const propVal = Number(document.getElementById('calc-property-value').value) || 0;
+        function runAllCalculations() {
+            // Lấy input Công cụ 1 (Khoản Vay)
             const loanAmount = Number(document.getElementById('calc-loan-amount').value) || 0;
-            if (propVal > 0) {
-                const percent = ((loanAmount / propVal) * 100).toFixed(1);
-                document.getElementById('calc-loan-percent').value = percent;
-            }
-            calculateMortgageAndCashflow();
-        }
+            const annualRate = (Number(document.getElementById('calc-loan-rate').value) || 0) / 100;
+            const totalMonths = Math.max(1, Number(document.getElementById('calc-loan-months').value) || 12);
+            const loanMethod = document.getElementById('calc-loan-method').value;
 
-        function calculateMortgageAndCashflow() {
-            const propVal = Number(document.getElementById('calc-property-value').value) || 0;
-            const loanAmount = Number(document.getElementById('calc-loan-amount').value) || 0;
-            const years = Number(document.getElementById('calc-loan-years').value) || 1;
-            const totalMonths = Math.max(1, years * 12);
-            const promoRate = (Number(document.getElementById('calc-rate-promo').value) || 0) / 100;
-            const floatRate = (Number(document.getElementById('calc-rate-float').value) || 0) / 100;
-            const method = document.getElementById('calc-loan-method').value;
+            document.getElementById('calc-loan-amount-helper').innerText = formatShortVND(loanAmount);
 
-            // Thông số cho thuê
-            const monthlyRent = Number(document.getElementById('calc-rent-month').value) || 0;
-            const occupancy = (Number(document.getElementById('calc-occupancy').value) || 0) / 100;
-            const operCost = Number(document.getElementById('calc-oper-cost').value) || 0;
-
-            // Helper text cho giá trị BĐS
-            document.getElementById('calc-val-helper').innerText = formatShortVND(propVal);
-
-            // Xây dựng bảng khấu hao & tính tổng lãi
             let remainingPrincipal = loanAmount;
             let totalInterest = 0;
-            let firstMonthPayment = 0;
-            let firstMonthP = 0;
-            let firstMonthI = 0;
+            let firstMonthTotal = 0;
             const schedule = [];
+            const monthlyRate = annualRate / 12;
 
-            if (method === 'decreasing') {
-                // Phương thức: Dư nợ giảm dần (Gốc đều hàng tháng)
-                const fixedPrincipalPerMonth = loanAmount / totalMonths;
+            if (loanMethod === 'decreasing') {
+                // Dư nợ giảm dần: Gốc đều
+                const fixedPrincipal = loanAmount / totalMonths;
 
                 for (let m = 1; m <= totalMonths; m++) {
-                    const currentAnnualRate = m <= 12 ? promoRate : floatRate;
-                    const monthlyRate = currentAnnualRate / 12;
                     const interestMonth = remainingPrincipal * monthlyRate;
-                    const principalMonth = Math.min(fixedPrincipalPerMonth, remainingPrincipal);
+                    const principalMonth = Math.min(fixedPrincipal, remainingPrincipal);
                     const totalMonth = principalMonth + interestMonth;
-
                     totalInterest += interestMonth;
 
-                    if (m === 1) {
-                        firstMonthPayment = totalMonth;
-                        firstMonthP = principalMonth;
-                        firstMonthI = interestMonth;
-                    }
+                    if (m === 1) firstMonthTotal = totalMonth;
 
-                    const endingPrincipal = Math.max(0, remainingPrincipal - principalMonth);
+                    const endPrincipal = Math.max(0, remainingPrincipal - principalMonth);
 
-                    if (m <= 36) { // Lưu 36 tháng đầu để hiển thị bảng
+                    if (m <= 24) {
                         schedule.push({
                             month: m,
-                            startPrincipal: remainingPrincipal,
-                            principal: principalMonth,
-                            interest: interestMonth,
+                            start: remainingPrincipal,
+                            p: principalMonth,
+                            i: interestMonth,
                             total: totalMonth,
-                            endPrincipal: endingPrincipal
+                            end: endPrincipal
                         });
                     }
-
-                    remainingPrincipal = endingPrincipal;
+                    remainingPrincipal = endPrincipal;
                     if (remainingPrincipal <= 0) break;
                 }
             } else {
-                // Phương thức: Trả góp đều (Niên kim cố định dựa trên lãi suất năm đầu)
-                const monthlyRatePromo = promoRate / 12;
+                // Trả góp đều (Niên kim)
                 let fixedMonthlyPayment = 0;
-                if (monthlyRatePromo > 0) {
-                    fixedMonthlyPayment = loanAmount * (monthlyRatePromo * Math.pow(1 + monthlyRatePromo, totalMonths)) / (Math.pow(1 + monthlyRatePromo, totalMonths) - 1);
+                if (monthlyRate > 0) {
+                    fixedMonthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
                 } else {
                     fixedMonthlyPayment = loanAmount / totalMonths;
                 }
 
                 for (let m = 1; m <= totalMonths; m++) {
-                    const currentAnnualRate = m <= 12 ? promoRate : floatRate;
-                    const monthlyRate = currentAnnualRate / 12;
                     const interestMonth = remainingPrincipal * monthlyRate;
                     const principalMonth = Math.min(fixedMonthlyPayment - interestMonth, remainingPrincipal);
                     const totalMonth = principalMonth + interestMonth;
-
                     totalInterest += interestMonth;
 
-                    if (m === 1) {
-                        firstMonthPayment = totalMonth;
-                        firstMonthP = principalMonth;
-                        firstMonthI = interestMonth;
-                    }
+                    if (m === 1) firstMonthTotal = totalMonth;
 
-                    const endingPrincipal = Math.max(0, remainingPrincipal - principalMonth);
+                    const endPrincipal = Math.max(0, remainingPrincipal - principalMonth);
 
-                    if (m <= 36) {
+                    if (m <= 24) {
                         schedule.push({
                             month: m,
-                            startPrincipal: remainingPrincipal,
-                            principal: principalMonth,
-                            interest: interestMonth,
+                            start: remainingPrincipal,
+                            p: principalMonth,
+                            i: interestMonth,
                             total: totalMonth,
-                            endPrincipal: endingPrincipal
+                            end: endPrincipal
                         });
                     }
-
-                    remainingPrincipal = endingPrincipal;
+                    remainingPrincipal = endPrincipal;
                     if (remainingPrincipal <= 0) break;
                 }
             }
 
-            // Tính toán dòng tiền ròng hàng tháng
-            const effectiveRent = (monthlyRent * occupancy) - operCost;
-            const netCashflow = effectiveRent - firstMonthPayment;
+            document.getElementById('res-loan-first-month').innerText = formatVND(firstMonthTotal);
+            document.getElementById('res-loan-total-interest').innerText = formatVND(totalInterest);
+            document.getElementById('res-loan-total-paid').innerText = formatVND(loanAmount + totalInterest);
 
-            // Tính tỷ suất lợi nhuận cho thuê (Rental Yield)
-            const annualEffectiveRent = effectiveRent * 12;
-            const rentalYield = propVal > 0 ? ((annualEffectiveRent / propVal) * 100).toFixed(2) : '0.00';
-
-            // Cập nhật kết quả lên UI
-            document.getElementById('calc-res-first-pay').innerText = formatVND(firstMonthPayment);
-            document.getElementById('calc-res-first-p').innerText = formatShortVND(firstMonthP);
-            document.getElementById('calc-res-first-i').innerText = formatShortVND(firstMonthI);
-
-            document.getElementById('calc-res-total-interest').innerText = formatVND(totalInterest);
-            document.getElementById('calc-res-total-paid').innerText = formatShortVND(loanAmount + totalInterest);
-
-            const netCashflowEl = document.getElementById('calc-res-net-cashflow');
-            const cashflowCard = document.getElementById('calc-cashflow-card');
-            const cashflowIcon = document.getElementById('calc-cashflow-icon');
-            const cashflowDesc = document.getElementById('calc-res-cashflow-desc');
-
-            netCashflowEl.innerText = (netCashflow >= 0 ? '+' : '') + formatVND(netCashflow) + ' / tháng';
-
-            if (netCashflow >= 0) {
-                netCashflowEl.className = "text-xl font-black text-emerald-600 mt-1";
-                cashflowIcon.className = "w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg";
-                cashflowDesc.innerText = "Dòng tiền DƯƠNG: BĐS tự nuôi lãi vay và có thặng dư";
-                cashflowDesc.className = "text-[11px] font-semibold text-emerald-600 mt-0.5";
-            } else {
-                netCashflowEl.className = "text-xl font-black text-rose-600 mt-1";
-                cashflowIcon.className = "w-11 h-11 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-lg";
-                cashflowDesc.innerText = `Dòng tiền ÂM: Cần bù ${formatShortVND(Math.abs(netCashflow))}/tháng để trả nợ`;
-                cashflowDesc.className = "text-[11px] font-semibold text-rose-600 mt-0.5";
+            // Hiển thị bảng khấu hao
+            const scheduleTbody = document.getElementById('loan-amortization-tbody');
+            if (scheduleTbody) {
+                scheduleTbody.innerHTML = schedule.map(row => `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 text-center font-bold text-slate-700">${row.month}</td>
+                        <td class="p-3 text-right font-medium">${formatVND(row.start)}</td>
+                        <td class="p-3 text-right font-bold text-slate-800">${formatVND(row.p)}</td>
+                        <td class="p-3 text-right font-bold text-amber-600">${formatVND(row.i)}</td>
+                        <td class="p-3 text-right font-black text-blue-700">${formatVND(row.total)}</td>
+                        <td class="p-3 text-right font-medium text-slate-500">${formatVND(row.end)}</td>
+                    </tr>
+                `).join('');
             }
 
-            document.getElementById('calc-res-rental-yield').innerText = `${rentalYield}% / năm`;
+            // Lấy input Công cụ 2 (Dòng Tiền Cho Thuê)
+            const buyPrice = Number(document.getElementById('calc-rent-buyprice').value) || 0;
+            const renoCost = Number(document.getElementById('calc-rent-renovation').value) || 0;
+            const rentIncome = Number(document.getElementById('calc-rent-monthly-income').value) || 0;
+            const rentCost = Number(document.getElementById('calc-rent-monthly-cost').value) || 0;
 
-            // Vẽ bảng khấu hao chi tiết
-            renderLoanScheduleTable(schedule);
+            const totalInvestmentCost = buyPrice + renoCost;
+            const netCashflowBeforeLoan = rentIncome - rentCost;
+            const netCashflowAfterLoan = netCashflowBeforeLoan - firstMonthTotal;
 
-            // Vẽ biểu đồ Gốc vs Lãi
-            renderLoanStructureChart(loanAmount, totalInterest);
+            const grossYield = totalInvestmentCost > 0 ? (((rentIncome * 12) / totalInvestmentCost) * 100).toFixed(2) : '0.00';
+            const netYield = totalInvestmentCost > 0 ? (((netCashflowBeforeLoan * 12) / totalInvestmentCost) * 100).toFixed(2) : '0.00';
+
+            document.getElementById('res-combined-loan-deduct').innerText = `-${formatVND(firstMonthTotal)} / tháng`;
+            
+            const netCashflowEl = document.getElementById('res-rent-net-cashflow');
+            netCashflowEl.innerText = (netCashflowAfterLoan >= 0 ? '+' : '') + formatVND(netCashflowAfterLoan) + ' / tháng';
+            netCashflowEl.className = `font-black text-sm ${netCashflowAfterLoan >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            document.getElementById('res-rent-gross-yield').innerText = `${grossYield}% / năm`;
+            document.getElementById('res-rent-net-yield').innerText = `${netYield}% / năm`;
         }
 
-        function renderLoanScheduleTable(schedule) {
-            const tbody = document.getElementById('loan-schedule-tbody');
-            if (!tbody) return;
+        /* ==============================================================
+           9. TAB 5: TRỢ LÝ AI TƯ VẤN ĐẦU TƯ (AI ADVISOR)
+           ============================================================== */
+        function refreshAIPortfolioAudit() {
+            const container = document.getElementById('ai-portfolio-summary-card');
+            if (!container) return;
 
-            if (schedule.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-400">Không có dữ liệu khoản vay.</td></tr>';
-                return;
-            }
+            let totalVal = 0;
+            let totalProfit = 0;
+            let uncertLegalCount = 0;
+            let highRoiCount = 0;
 
-            tbody.innerHTML = schedule.map(row => `
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="p-3 text-center font-bold text-slate-700">Tháng ${row.month}</td>
-                    <td class="p-3 text-right font-medium">${formatVND(row.startPrincipal)}</td>
-                    <td class="p-3 text-right font-semibold text-slate-800">${formatVND(row.principal)}</td>
-                    <td class="p-3 text-right font-semibold text-amber-600">${formatVND(row.interest)}</td>
-                    <td class="p-3 text-right font-bold text-blue-600">${formatVND(row.total)}</td>
-                    <td class="p-3 text-right font-medium text-slate-600">${formatVND(row.endPrincipal)}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderLoanStructureChart(loanAmount, totalInterest) {
-            const canvas = document.getElementById('loanStructureChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-
-            if (chartInstances.loanChart) {
-                chartInstances.loanChart.destroy();
-            }
-
-            chartInstances.loanChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Tiền Gốc Vay', 'Tổng Tiền Lãi Ngân Hàng'],
-                    datasets: [{
-                        data: [Math.round(loanAmount), Math.round(totalInterest)],
-                        backgroundColor: ['#2563eb', '#f59e0b'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const val = context.raw || 0;
-                                    const total = loanAmount + totalInterest;
-                                    const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                                    return `${context.label}: ${formatShortVND(val)} (${pct}%)`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '60%'
-                }
+            properties.forEach(p => {
+                const cost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
+                const profit = (Number(p.sellPrice) || 0) - cost;
+                const roi = cost > 0 ? (profit / cost) * 100 : 0;
+                totalVal += cost;
+                totalProfit += profit;
+                if (p.legal.includes('Chờ') || p.legal.includes('HĐMB')) uncertLegalCount++;
+                if (roi >= 25) highRoiCount++;
             });
+
+            const overallRoi = totalVal > 0 ? ((totalProfit / totalVal) * 100).toFixed(1) : '0.0';
+
+            container.innerHTML = `
+                <div class="bg-white/10 p-4 rounded-2xl border border-white/10 backdrop-blur-xs">
+                    <span class="text-[10px] text-indigo-300 font-bold uppercase tracking-wider block">1. Sức Khỏe Danh Mục</span>
+                    <h4 class="text-base font-black text-white mt-1">${properties.length} Bất Động Sản (${formatShortVND(totalVal)})</h4>
+                    <p class="text-xs text-slate-300 mt-1">Lợi nhuận gộp kỳ vọng: <span class="text-emerald-400 font-bold">+${formatShortVND(totalProfit)}</span> (ROI ~ ${overallRoi}%)</p>
+                </div>
+
+                <div class="bg-white/10 p-4 rounded-2xl border border-white/10 backdrop-blur-xs">
+                    <span class="text-[10px] text-amber-300 font-bold uppercase tracking-wider block">2. Đánh Giá Rủi Ro Pháp Lý</span>
+                    <h4 class="text-base font-black text-amber-400 mt-1">${uncertLegalCount > 0 ? uncertLegalCount + ' BĐS Chưa Có Sổ Hồng' : 'Danh Mục An Toàn 100%'}</h4>
+                    <p class="text-xs text-slate-300 mt-1">${uncertLegalCount > 0 ? 'Cần theo dõi tiến độ chủ đầu tư và hợp đồng mua bán.' : 'Toàn bộ tài sản đều có sổ hồng/sổ đỏ an toàn cao.'}</p>
+                </div>
+
+                <div class="bg-white/10 p-4 rounded-2xl border border-white/10 backdrop-blur-xs">
+                    <span class="text-[10px] text-emerald-300 font-bold uppercase tracking-wider block">3. Cơ Hội Tối Ưu Lợi Nhuận</span>
+                    <h4 class="text-base font-black text-emerald-400 mt-1">${highRoiCount} BĐS Tỷ Suất Sinh Lời > 25%</h4>
+                    <p class="text-xs text-slate-300 mt-1">Thời điểm vàng để phân bổ chiến lược chốt lời từng phần và tái cơ cấu.</p>
+                </div>
+            `;
+
+            if (chatMessages.length === 0) {
+                chatMessages.push({
+                    sender: 'ai',
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    text: `Xin chào nhà đầu tư! Tôi là **AI Real Estate Advisor**. Tôi đã đọc toàn bộ dữ liệu gồm **${properties.length} BĐS** và **${customers.length} khách hàng** trong hệ thống của bạn. Hãy bấm một trong 4 kịch bản tư vấn nhanh bên trên hoặc đặt bất kỳ câu hỏi nào về thị trường, tài chính và chiến lược chốt lời!`
+                });
+                renderAIChatMessages();
+            }
         }
 
-        /* =====================================
-           9. KHỞI TẠO ỨNG DỤNG LẦN ĐẦU (INIT)
-           ===================================== */
-        function refreshApp() {
-            renderDashboard();
+        function triggerQuickPrompt(type) {
+            let promptText = "";
+            if (type === 'risk') {
+                promptText = "Phân tích toàn diện rủi ro danh mục BĐS hiện tại của tôi (pháp lý, thanh khoản, phân bổ vốn)?";
+            } else if (type === 'profit') {
+                promptText = "Bất động sản nào trong danh mục nên ưu tiên chốt lời ngay bây giờ và chiến lược tái đầu tư là gì?";
+            } else if (type === 'leverage') {
+                promptText = "Tư vấn tỷ lệ đòn bẩy vay ngân hàng tối ưu cho danh mục của tôi để không bị âm dòng tiền?";
+            } else if (type === 'rent_vs_sell') {
+                promptText = "Tôi nên chọn phương án giữ BĐS cho thuê dài hạn hay bán dứt điểm để lấy lãi vốn trong giai đoạn này?";
+            }
+
+            sendUserMessageToAI(promptText);
+        }
+
+        function handleAIChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('ai-user-input');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            sendUserMessageToAI(text);
+        }
+
+        function sendUserMessageToAI(text) {
+            const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            chatMessages.push({ sender: 'user', time: now, text: text });
+            renderAIChatMessages();
+
+            // Hiển thị trạng thái đang soạn
+            setTimeout(() => {
+                const response = generateAIKnowledgeResponse(text);
+                chatMessages.push({
+                    sender: 'ai',
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    text: response
+                });
+                renderAIChatMessages();
+            }, 500);
+        }
+
+        function generateAIKnowledgeResponse(prompt) {
+            const lower = prompt.toLowerCase();
+            let totalVal = 0;
+            let totalProfit = 0;
+            properties.forEach(p => {
+                const cost = (Number(p.buyPrice) || 0) + (Number(p.extraCost) || 0);
+                totalVal += cost;
+                totalProfit += ((Number(p.sellPrice) || 0) - cost);
+            });
+
+            if (lower.includes('rủi ro') || lower.includes('risk')) {
+                const uncert = properties.filter(p => !p.legal.includes('Sổ'));
+                return `**Báo Cáo Đánh Giá Rủi Ro Danh Mục (Tổng vốn ${formatShortVND(totalVal)}):**\n\n` +
+                       `1. **Rủi ro Pháp lý:** Bạn có ${uncert.length} BĐS đang ở dạng HĐMB/Chờ sổ (${uncert.map(p=>p.name).join(', ') || 'Không có'}). Với loại hình này, cần giám sát kỹ uy tín chủ đầu tư và tiến độ ra sổ.\n` +
+                       `2. **Rủi ro Thanh khoản:** Các BĐS trên 10 tỷ (như biệt thự/nhà phố lớn) thường có chu kỳ bán kéo dài từ 6 - 12 tháng. Không nên phụ thuộc vốn ngắn hạn vào các tài sản này.\n` +
+                       `3. **Khuyến nghị AI:** Nên duy trì quỹ dự phòng tiền mặt tương đương tối thiểu 6 tháng chi phí trả nợ hoặc chi phí vận hành.`;
+            }
+
+            if (lower.includes('chốt lời') || lower.includes('bán') && lower.includes('nào')) {
+                const best = [...properties].sort((a,b) => {
+                    const roiA = ((a.sellPrice - a.buyPrice) / a.buyPrice);
+                    const roiB = ((b.sellPrice - b.buyPrice) / b.buyPrice);
+                    return roiB - roiA;
+                })[0];
+                return `**Chiến Lược Chốt Lời Đề Xuất:**\n\n` +
+                       (best ? `• BĐS tiềm năng chốt lời tốt nhất hiện tại là **"${best.name}"** với giá kỳ vọng **${formatShortVND(best.sellPrice)}**.\n` : '') +
+                       `• **Nguyên tắc 70/30:** Khi tài sản đã đạt 80-90% biên độ lợi nhuận kỳ vọng, nên chủ động hạ giá 3-5% so với thị trường để chốt lời thanh khoản nhanh.\n` +
+                       `• Sau khi chốt lời, hãy tái cơ cấu 50% vào tài sản tạo dòng tiền ngay (nhà trọ, chung cư cho thuê) và 50% gom quỹ đất đón sóng hạ tầng.`;
+            }
+
+            if (lower.includes('đòn bẩy') || lower.includes('vay') || lower.includes('ngân hàng')) {
+                return `**Tư Vấn Tối Ưu Đòn Bẩy Tài Chính Ngân Hàng:**\n\n` +
+                       `• **Tỷ lệ vàng LTV:** Không bao giờ vay vượt quá **50% - 60%** giá trị thực tế của danh mục BĐS.\n` +
+                       `• **Chỉ số DTI (Khả năng trả nợ):** Tổng số tiền gốc + lãi trả ngân hàng mỗi tháng không nên vượt quá **40% tổng thu nhập hàng tháng** của bạn.\n` +
+                       `• **Bẫy lãi suất thả nổi:** Cần tính toán phương án dự phòng khi hết ưu đãi, lãi suất thả nổi có thể tăng thêm 3% - 4%/năm. Hãy dùng Tab **Tính Vay & Dòng Tiền** của ứng dụng để kiểm tra áp lực dòng tiền.`;
+            }
+
+            if (lower.includes('thuê') || lower.includes('rent')) {
+                return `**Bài Toán Cho Thuê Dòng Tiền vs Bán Lãi Vốn:**\n\n` +
+                       `• Nếu tỷ suất cho thuê ròng (Net Rental Yield) của BĐS đạt **trên 5.5%/năm**, bạn nên giữ lại tài sản để khai thác dòng tiền và chờ tăng giá vốn dài hạn.\n` +
+                       `• Nếu tỷ suất cho thuê **dưới 3.5%/năm** và giá BĐS đã đi ngang hơn 1 năm, phương án tối ưu là **Bán** để gom vốn chuyển hướng sang đất nền đón sóng hạ tầng có biên độ ROI cao hơn.`;
+            }
+
+            return `Dựa trên dữ liệu danh mục hiện tại (Tổng vốn **${formatShortVND(totalVal)}**, Lợi nhuận dự kiến **${formatShortVND(totalProfit)}**):\n\n` +
+                   `• Bạn đang nắm giữ cơ cấu tài sản khá cân bằng giữa đất nền, nhà phố và căn hộ.\n` +
+                   `• Về khách hàng CRM: Bạn đang có **${customers.length} khách hàng tiềm năng**, hãy ưu tiên liên hệ nhóm khách có trạng thái "Đang tư vấn" để gia tăng tỷ lệ chốt giao dịch.\n` +
+                   `• Bạn muốn tôi phân tích sâu hơn về BĐS nào cụ thể trong danh mục không?`;
+        }
+
+        function renderAIChatMessages() {
+            const chatBox = document.getElementById('ai-chat-messages');
+            if (!chatBox) return;
+
+            chatBox.innerHTML = chatMessages.map(msg => {
+                const isAI = msg.sender === 'ai';
+                const formattedContent = msg.text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                return `
+                <div class="flex items-start space-x-2.5 ${isAI ? '' : 'flex-row-reverse space-x-reverse'}">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center text-xs shrink-0 ${isAI ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-700 text-white'}">
+                        <i class="fa-solid ${isAI ? 'fa-robot' : 'fa-user'}"></i>
+                    </div>
+                    <div class="max-w-[80%] rounded-2xl p-3.5 ${isAI ? 'bg-white text-slate-800 border border-slate-200/90 shadow-2xs' : 'bg-indigo-600 text-white'}">
+                        <div class="flex items-center justify-between mb-1 text-[10px] ${isAI ? 'text-slate-400' : 'text-indigo-200'}">
+                            <span class="font-bold">${isAI ? 'Trợ Lý AI BĐS' : 'Bạn'}</span>
+                            <span class="ml-2">${msg.time}</span>
+                        </div>
+                        <div class="leading-relaxed text-xs">${formattedContent}</div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function clearAIChatHistory() {
+            if (confirm("Xóa toàn bộ lịch sử trò chuyện cùng Trợ lý AI?")) {
+                chatMessages = [];
+                refreshAIPortfolioAudit();
+            }
+        }
+
+        /* ==============================================================
+           10. KHỞI TẠO TỔNG THỂ ỨNG DỤNG (INITIALIZATION)
+           ============================================================== */
+        function refreshAllViews() {
+            renderDashboardMetrics();
             renderProperties();
             renderCustomers();
-            populateCalcPropertyDropdown();
+            populateCalculatorDropdown();
+            runAllCalculations();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            refreshApp();
+            loadDataFromStorage();
+            refreshAllViews();
         });
     </script>
 </body>
